@@ -1,0 +1,1 @@
+const ehPar = (n: number) => n % 2 === 0;
