@@ -91,12 +91,11 @@ class Radio {
 let r: Radio = new Radio();
 r.volume = 10;
 ```
-<br>
 Justifique o erro de compilação e proponha uma solução.<br>
 
 Resposta:
-O erro de compilação ocorre pois não foi passado nenhum parâmetro para o construtor da classe Radio.<br> 
-Para solucionar o problema, basta passar um parâmetro para o construtor, como por exemplo: 3.<br>
+O erro de compilação ocorre pois não foi passado nenhum parâmetro para o construtor da classe Radio. Para solucionar o problema, 
+basta passar um parâmetro para o construtor, como por exemplo: 3.<br>
 
 ```typescript
 class Radio {
