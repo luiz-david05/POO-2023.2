@@ -5,8 +5,7 @@ b. ( ) Atributos de uma classe devem ser obrigatoriamente inicializados para que
 c. ( ) Uma variável declarada dentro de um método deve ser inicializada para que a classe seja compilável<br>  
 d. ( ) Construtores são rotinas especiais que servem para inicializar e configurar os objetos no momento da instanciação<br>  
 e. ( ) Construtores não possuem tipo de retorno e podem ou não ter parâmetros<br>  
-f. ( ) Uma classe pode ter várias instâncias.<br>  
-<br>
+f. ( ) Uma classe pode ter várias instâncias.<br>
 
 ```Resposta: a - f, b - f, c - f, d - v, e - v, f - v.  
 
@@ -42,7 +41,7 @@ Ademais é impossível localizar a variável "qtdReservas" sem a utilização do
 ```
 <br>
 
-3. Ainda sobre a classe do exemplo anterior, considere o código abaixo:
+## 3. Ainda sobre a classe do exemplo anterior, considere o código abaixo:
 
 ```typescript
 
@@ -78,7 +77,8 @@ let hotel: Hotel = new Hotel(2);
 console.log(hotel.qtdReservas);
 ```
 <br>
-4. Considere a classe Radio e as instruções que fazem seu uso abaixo:
+
+## 4. Considere a classe Radio e as instruções que fazem seu uso abaixo:
 
 ```typescript
 class Radio {
@@ -95,7 +95,7 @@ r.volume = 10;
 Justifique o erro de compilação e proponha uma solução.<br>
 
 Resposta:
-O erro de compilação ocorre pois não foi passado nenhum parâmetro para o construtor da classe Radio. 
+O erro de compilação ocorre pois não foi passado nenhum parâmetro para o construtor da classe Radio.<br> 
 Para solucionar o problema, basta passar um parâmetro para o construtor, como por exemplo: 3.<br>
 
 ```typescript
