@@ -54,7 +54,7 @@ class Hotel {
 }
 
 let hotel : Hotel = new Hotel(2);
-console.log(hotel.qtdReservas);
+console.log(hotel.qtdReservas); // 2
 ```
 <br>
 Adicione o construtor que aceite um parâmetro inteiro e faça a inicialização do atributo qtdReservas.
@@ -108,4 +108,84 @@ class Radio {
 
 let r: Radio = new Radio(3);
 r.volume = 10;
+```
+
+## 5. Considerando o uso da classe Conta apresentada em aula e seu uso abaixo:
+
+```typescript
+class Conta {
+    numero: string;
+    saldo: number;
+
+    sacar (valor: number): void {
+        this.saldo -= valor;
+    }
+    
+    depositar (valor: number): void {
+        this.saldo += valor;
+    }
+
+    consultarSaldo (): number {
+        return this.saldo;
+    }
+
+    transferir (destino: Conta, valor: number): void {
+        this.sacar(valor);
+        destino.depositar(valor);
+    }
+}
+
+let c1: Conta = new Conta("1", 100);
+let c2: Conta = new Conta("2", 100);
+let c3: Conta;
+
+c1 = c2;
+c3 = c1;
+
+c1.sacar(10);
+c1.transferir(c2, 50);
+
+console.log(c1.consultarSaldo());
+console.log(c2.consultarSaldo());
+console.log(c3.consultarSaldo());
+```
+<br>
+
+a. Qual o resultado dos dois (? não seriam três ?) "prints" ? Justifique sua resposta.<br>
+b. O que acontece com o objeto para qual a referência c1 apontava ?<br>
+
+
+```Resposta:
+a. 90, 90, 90. Pois as variáveis c1, c2 e c3 apontam para o mesmo objeto.
+
+b. O objeto para o qual a referência c1 apontava é perdido e é eliminado pelo Garbage Colector(GB) do javascript, pois a variável c1 passa a apontar para o objeto para o qual a variável c2 apontava.
+```
+<br>
+
+## 6. Crie uma classe chamada Saudacao que:
+<ul> 
+    <li>Contenha um atributo chamado texto e outro chamado destinatario, ambos do tipo String.</li>
+    <li> Crie um construtor que inicializa os dois atributos</li>
+    <li> Crie um método obterSaudacao( ) que retorne a concatenação dos dois atributos. Ex: "Bom dia, João"</li>
+    <li> instancie uma classe Saudacao e teste sem método obterSaudacao( )</li>
+</ul>
+<br>
+
+```typescript
+class Saudacao {
+    texto: string;
+    destinatario: string;
+
+    constructor (texto: string, destinatario: string) {
+        this.texto = texto;
+        this.destinatario = destinatario;
+    }
+
+    obterSaudacao(): string {
+        return `\n${this.texto}, ${this.destinatario}`
+    }
+}
+
+let s: Saudacao = new Saudacao("Bom dia", "Luiz.");
+console.log(s.obterSaudacao());
 ```
