@@ -167,7 +167,7 @@ b. O objeto para o qual a referência c1 apontava é perdido e é eliminado pelo
     <li>Contenha um atributo chamado texto e outro chamado destinatario, ambos do tipo String.</li>
     <li> Crie um construtor que inicializa os dois atributos</li>
     <li> Crie um método obterSaudacao( ) que retorne a concatenação dos dois atributos. Ex: "Bom dia, João"</li>
-    <li> instancie uma classe Saudacao e teste sem método obterSaudacao( )</li>
+    <li> instancie uma classe Saudacao e teste seu método obterSaudacao( )</li>
 </ul>
 <br>
 
