@@ -96,7 +96,7 @@ Justifique o erro de compilação e proponha uma solução.
 
 <br>
 ```Resposta:
-O erro de compilação ocorre pois não foi passado nenhum parâmetro para o construtor da classe Radio. Para solucionar o problema, basta passar um parâmetro para o construtor, como por exemplo: 3;
+O erro de compilação ocorre pois não foi passado nenhum parâmetro para o construtor da classe Radio. Para solucionar o problema, basta passar um parâmetro para o construtor, como por exemplo: 3.
 ```
 <br>
 
