@@ -466,5 +466,6 @@ console.log(jogador1.determinarVencedor(jogador1, jogador2))
 ## 11. A abordagem da questão 5 é retornar códigos de erro ou acerto. Já a da questão 6.f. é desconsiderar a alteração. 
 ## Quais das duas você acha mais correta?Compare com seus códigos escritos em outras disciplinas.
 
-```Resposta: Acho a abordagem de retornar códigos de erro ou acerto mais correta, tendo em vista que há um controle maior sobre o código.
-```
+```Resposta:
+ Acho a abordagem de retornar códigos de erro ou acerto mais correta, tendo em vista que há um controle maior sobre o código.
+ ```
