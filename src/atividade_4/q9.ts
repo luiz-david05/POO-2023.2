@@ -53,5 +53,3 @@ else {
     console.log("\nA operação não foi realizada")
     console.log(`saldo da conta ${conta2.numero}: ${conta1.consultarSaldo()}`)
 }
-
-

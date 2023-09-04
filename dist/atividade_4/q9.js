@@ -21,7 +21,6 @@ class Conta2 {
     }
     transferir(destino, valor) {
         if (!(this.sacar(valor))) {
-            console.log("\nOperação não permitida, saldo da conta insuficiente");
             return false;
         }
         this.sacar(valor);
