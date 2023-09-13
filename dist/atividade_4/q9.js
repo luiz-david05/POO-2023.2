@@ -1,5 +1,4 @@
-"use strict";
-class Conta2 {
+export class Conta {
     numero; // = 0;
     saldo; // = 0;
     constructor(numero, saldo) {
@@ -27,20 +26,4 @@ class Conta2 {
         destino.depositar(valor);
         return true;
     }
-}
-let conta1 = new Conta2("111", 100);
-let conta2 = new Conta2("222", 100);
-if (conta1.sacar(110)) {
-    console.log("Há um erro no código");
-}
-else {
-    console.log("\nA operação não foi realizada.");
-    console.log(`saldo da conta ${conta1.numero}: ${conta1.consultarSaldo()}`);
-}
-if (conta1.transferir(conta2, 110)) {
-    console.log("\nHá um erro no código");
-}
-else {
-    console.log("\nA operação não foi realizada");
-    console.log(`saldo da conta ${conta2.numero}: ${conta1.consultarSaldo()}`);
 }
