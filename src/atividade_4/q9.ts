@@ -24,13 +24,12 @@ export class Conta {
         return this.saldo;
     }
 
-    transferir (destino: Conta, valor: number): boolean {
-        if (!(this.sacar(valor))) {
+    transferir (contaDestino: Conta, valor: number): boolean {
+        if (!this.sacar(valor)) {
             return false
         }
 
-        this.sacar(valor);
-        destino.depositar(valor);
+        contaDestino.depositar(valor);
         return true
     }
 }

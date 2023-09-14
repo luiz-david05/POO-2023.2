@@ -1,4 +1,4 @@
-// questão 7
+/* questão 7
 
 class Retangulo {
     l1: number = 0;
@@ -63,3 +63,5 @@ situacaoFinanceira.valorCreditos = 1000;
 situacaoFinanceira.valorDebitos = 500;
 
 console.log(`saldo: ${situacaoFinanceira.calcularSaldo()}`)
+
+*/

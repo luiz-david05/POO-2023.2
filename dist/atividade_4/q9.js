@@ -18,12 +18,11 @@ export class Conta {
     consultarSaldo() {
         return this.saldo;
     }
-    transferir(destino, valor) {
-        if (!(this.sacar(valor))) {
+    transferir(contaDestino, valor) {
+        if (!this.sacar(valor)) {
             return false;
         }
-        this.sacar(valor);
-        destino.depositar(valor);
+        contaDestino.depositar(valor);
         return true;
     }
 }

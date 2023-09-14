@@ -1,116 +1,97 @@
-import {Conta} from '../atividade_4/q9'
+import { Conta } from "../atividade_4/q9";
+
 
 class Banco {
-    contas: Conta[] = [];
+    contas: Conta[] = []
+    
+    inserirConta(conta: Conta){
+        let indiceAlvo = this.consultarContaPorIndice(conta.numero)
 
-    inserirConta(conta: Conta) {
-        for (let i = 0; i < this.contas.length; i++){
-            if (this.contas[i].numero == conta.numero){
-                console.log("A conta já existe no banco de dados.")
-                return;
-            }
+        if (indiceAlvo != -1){
+            console.log("A conta já existe!")
+            return
         }
-        this.contas.push(conta);
+
+        this.contas.push(conta)
+    }
+    
+    calcularQtdContas(): number{
+        return this.contas.length
     }
 
-    consultarConta(numero:string): Conta{
-        let contaProcurada!: Conta = null;
-
-        for (let i = 0; i < this.contas.length; i++){
+    consultarConta(numero: string): Conta{
+        let contaAlvo!: Conta
+        let qtdContas = this.calcularQtdContas()
+        
+        for (let i = 0; i < qtdContas; i++){
             if (this.contas[i].numero == numero){
-                contaProcurada = this.contas[i];
-                break;
+                contaAlvo = this.contas[i]
             }
         }
 
-        return contaProcurada;
+        return contaAlvo
     }
+    
+    consultarContaPorIndice(numero: string): number{
+        let indiceAlvo = -1
+        let qtdContas = this.calcularQtdContas()
 
-    consultarPorIndice(numero:string): number{
-        let indiceProcurado = -1;
-
-        for (let i = 0; i < this.contas.length; i++){
+        for (let i = 0; i < qtdContas; i++){
             if (this.contas[i].numero == numero){
-                indiceProcurado = i;
-                break;
+                indiceAlvo = i
+                break
             }
         }
 
-        return indiceProcurado;
+        return indiceAlvo
     }
 
-    alterarConta(conta: Conta) {
-        let indiceProcurado = this.consultarPorIndice(conta.numero);
+    alterarConta(conta: Conta){
+        let indiceAlvo = this.consultarContaPorIndice(conta.numero)
 
-        if (indiceProcurado != -1){
-            this.contas[indiceProcurado] = conta;
+        if (indiceAlvo != -1){
+            this.contas[indiceAlvo] = conta
         }
     }
 
-    excluirConta(numero:string){
-        let indiceProcurado = this.consultarPorIndice(numero);
+    excluirConta(numero: string){
+        let indiceAlvo = this.consultarContaPorIndice(numero)
+        let qtdContas = this.calcularQtdContas()
 
-        if (indiceProcurado != -1){
-            for (let i = indiceProcurado; i < this.contas.length; i++){
-                this.contas[i] = this.contas[i+1];
+        if (indiceAlvo != -1){
+            for (let i = indiceAlvo; i < qtdContas; i++){
+                this.contas[i] = this.contas[i+1]
             }
 
-            this.contas.pop();
+            this.contas.pop()
         }
     }
 
-    sacar(numero:string, valor:number){
-        let indiceProcurado = this.consultarPorIndice(numero);
+    sacar(numero: string, valor: number){
+        let indiceAlvo = this.consultarContaPorIndice(numero)
 
-        if (indiceProcurado != -1){
-            let conta:Conta = this.contas[indiceProcurado];
-            conta.sacar(valor);
-        }
-    }
-
-    creditar(numero:string, valorCredito: number){
-        let indiceProcurado = this.consultarPorIndice(numero);
-
-        if (indiceProcurado != -1){
-            let conta: Conta = this.contas[indiceProcurado]
-            conta.depositar(valorCredito)
-            console.log(`Operação de crédito no valor: R$ ${valorCredito.toFixed(2)}, realizada!`)
+        if (indiceAlvo != -1){
+            let conta: Conta = this.contas[indiceAlvo]
+            console.log(`Operação de crédito no valor: R$ ${valor.toFixed(2)}, realizada com sucesso!`)
+            conta.depositar(valor)
+            console.log(`Novo saldo da conta "${numero}": R$ ${conta.consultarSaldo().toFixed(2)}`)
         }
         else {
-            console.log("Conta não encontrada!")
+            console.log(`Conta "${numero}" não encontrada!`)
         }
     }
 
-    exibirContas() {
-       for (let c of this.contas){
-        console.log(c)
-       }
-    }
-
-    transferir(numeroCredito: string, numeroDebito: string, valor: number){
-        let indiceProcuradoCredito = this.consultarPorIndice(numeroCredito);
-        let indiceProcuradoDebito = this.consultarPorIndice(numeroDebito);
-
-        if (indiceProcuradoCredito != -1 && indiceProcuradoDebito != -1){
-            let contaCredito: Conta = this.contas[indiceProcuradoCredito]
-            let contaDebito: Conta = this.contas[indiceProcuradoDebito]
-
-            contaCredito.transferir(contaDebito, valor)
-
-            console.log(`Transferência realizada com sucesso!`)
-        }
-        else {
-            console.log("Operação não concluída!")
+    exibirContas(){
+        for (let conta of this.contas){
+            console.log(conta)
         }
     }
 }
 
-let banco: Banco = new Banco()
-let contaTeste: Conta = new Conta("1111-1", 100)
-banco.inserirConta(contaTeste)
-banco.inserirConta(new Conta("1111-1", 200))
-banco.creditar("1111-1", 100)
-banco.exibirContas()
-banco.inserirConta(new Conta("1111-2", 0))
-banco.transferir("1111-1", "1111-2", 100)
-banco.exibirContas()
+let pagbank: Banco = new Banco()
+pagbank.inserirConta(new Conta("1111", 100))
+pagbank.exibirContas()
+pagbank.inserirConta(new Conta("1111", 0))
+pagbank.inserirConta(new Conta("1113", 0))
+pagbank.sacar("1112", 100)
+pagbank.exibirContas()
