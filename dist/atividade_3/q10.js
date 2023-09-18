@@ -1,4 +1,3 @@
-"use strict";
 /*10. Resolva o problema abaixo usando Map/Reduce e Objetos JavaScript com a
 sintaxe TypeScript.
 

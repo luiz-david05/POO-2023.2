@@ -1,4 +1,3 @@
-"use strict";
 class Hotel {
     qtdReservas = 0;
     constructor(qtdReservas) {

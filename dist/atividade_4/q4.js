@@ -1,4 +1,3 @@
-"use strict";
 class Radio {
     volume;
     constructor(volume) {

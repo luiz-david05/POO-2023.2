@@ -1,4 +1,3 @@
-"use strict";
 const formatarArrayComDashes = (arr) => {
     let str = "";
     arr.forEach((num, index) => {

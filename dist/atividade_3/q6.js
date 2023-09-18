@@ -1,4 +1,3 @@
-"use strict";
 const exibir = (...args) => {
     args.forEach(arg => console.log(arg));
 };

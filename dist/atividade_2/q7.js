@@ -1,4 +1,3 @@
-"use strict";
 const teacherName = "Ely";
 const paymentTime = 120.56;
 const prefferedLanguage = "TypeScript";

@@ -1,4 +1,3 @@
-"use strict";
 /* questão 7
 
 class Retangulo {

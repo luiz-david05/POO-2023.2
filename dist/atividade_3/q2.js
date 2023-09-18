@@ -1,4 +1,3 @@
-"use strict";
 const ehPrimo = (n) => {
     if (n <= 1)
         return false;

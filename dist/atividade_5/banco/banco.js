@@ -1,5 +1,32 @@
-import { Conta } from "../atividade_4/q9";
-class Banco {
+export class Conta {
+    numero; // = 0;
+    saldo; // = 0;
+    constructor(numero, saldo) {
+        this.numero = numero;
+        this.saldo = saldo;
+    }
+    sacar(valor) {
+        if (this.saldo - valor < 0) {
+            return false;
+        }
+        this.saldo -= valor;
+        return true;
+    }
+    depositar(valor) {
+        this.saldo += valor;
+    }
+    consultarSaldo() {
+        return this.saldo;
+    }
+    transferir(contaDestino, valor) {
+        if (!this.sacar(valor)) {
+            return false;
+        }
+        contaDestino.depositar(valor);
+        return true;
+    }
+}
+export class Banco {
     contas = [];
     inserirConta(conta) {
         let indiceAlvo = this.consultarContaPorIndice(conta.numero);
@@ -92,16 +119,3 @@ class Banco {
         return saldoTotalContas / qtdContas;
     }
 }
-let pagbank = new Banco();
-pagbank.inserirConta(new Conta("1111", 100));
-// pagbank.exibirContas()
-pagbank.inserirConta(new Conta("1111", 0));
-pagbank.inserirConta(new Conta("1113", 0));
-pagbank.sacar("1112", 100);
-// pagbank.exibirContas()
-pagbank.inserirConta(new Conta("1114", 100));
-pagbank.transferir("1111", "1114", 10);
-pagbank.exibirContas();
-console.log(`Quantidade de contas ${pagbank.calcularQtdContas()}`);
-console.log(`Saldo total de todas as contas: ${pagbank.calcularSaldoBanco().toFixed(2)}`);
-console.log(`Média de saldo das contas: ${pagbank.mediaSaldo().toFixed(2)}`);

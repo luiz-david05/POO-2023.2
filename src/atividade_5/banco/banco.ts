@@ -1,7 +1,41 @@
-import { Conta } from "../atividade_4/q9";
+export class Conta {
+    numero: string; // = 0;
+    saldo: number; // = 0;
+
+    constructor (numero: string, saldo: number) {
+        this.numero = numero;
+        this.saldo = saldo;
+    }
+
+    sacar (valor: number): boolean {
+        if (this.saldo - valor < 0){
+            return false
+        }
+
+        this.saldo -= valor
+        return true
+    }
+    
+    depositar (valor: number): void {
+        this.saldo += valor;
+    }
+
+    consultarSaldo (): number {
+        return this.saldo;
+    }
+
+    transferir (contaDestino: Conta, valor: number): boolean {
+        if (!this.sacar(valor)) {
+            return false
+        }
+
+        contaDestino.depositar(valor);
+        return true
+    }
+}
 
 
-class Banco {
+export class Banco {
     contas: Conta[] = []
     
     inserirConta(conta: Conta){
@@ -121,17 +155,3 @@ class Banco {
         return saldoTotalContas / qtdContas
     } 
 }
-
-let pagbank: Banco = new Banco()
-pagbank.inserirConta(new Conta("1111", 100))
-// pagbank.exibirContas()
-pagbank.inserirConta(new Conta("1111", 0))
-pagbank.inserirConta(new Conta("1113", 0))
-pagbank.sacar("1112", 100)
-// pagbank.exibirContas()
-pagbank.inserirConta(new Conta("1114", 100))
-pagbank.transferir("1111", "1114", 10)
-pagbank.exibirContas()
-console.log(`Quantidade de contas ${pagbank.calcularQtdContas()}`)
-console.log(`Saldo total de todas as contas: ${pagbank.calcularSaldoBanco().toFixed(2)}`)
-console.log(`Média de saldo das contas: ${pagbank.mediaSaldo().toFixed(2)}`)

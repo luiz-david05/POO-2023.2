@@ -1,4 +1,3 @@
-"use strict";
 class Jogador {
     apelido;
     forca = 0;

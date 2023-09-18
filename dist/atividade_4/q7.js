@@ -1,4 +1,3 @@
-"use strict";
 class Triangulo {
     l1;
     l2;
