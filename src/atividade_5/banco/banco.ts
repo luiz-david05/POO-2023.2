@@ -153,5 +153,9 @@ export class Banco {
         }
 
         return saldoTotalContas / qtdContas
-    } 
+    }
+    
+    toString(conta: Conta): string {
+        return `\nConta n°: "${conta.numero}"\nSaldo: R$ ${conta.consultarSaldo().toFixed(2)}"`
+    }
 }

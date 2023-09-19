@@ -1,10 +1,6 @@
 import { question } from "readline-sync";
 export const input = (texto) => {
     let resposta = question(texto);
-    while (resposta == "") {
-        console.log("Digite algo, tente novamente.");
-        resposta = question(texto);
-    }
     return resposta;
 };
 export const getNumber = (texto) => {

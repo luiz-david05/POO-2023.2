@@ -107,6 +107,6 @@ class Microblog {
 let microblog: Microblog = new Microblog()
 microblog.inserir(new Postagem(1, "Se inscreva no canal simpsom gamer, esse canal é bom demais", 1000))
 microblog.inserir(new Postagem(2, "Vou bater o recorde mundial em ajudar homens, sou solidário, \najudei mais de 2050 homens", 0))
-microblog.inserir(new Postagem(3, "A terra é plana ? Se fosse redonda se chamaria: Redondeta", 10))
+microblog.inserir(new Postagem(3, "Imigração não existe, partindo do pressuposto que delimitações de terra são imaginárias, o Estado opera com violência, pois sem a mesma não há Estado.", 10))
 console.log(microblog.toString())
 console.log(`Postagem com mais curtidas: ${microblog.postagemMaisCurtida()}`)

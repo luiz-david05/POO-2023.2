@@ -1,70 +1,48 @@
-import { input, getNumber } from "./entrada_utils"
+import { input } from "./entrada_utils"
 import { Conta, Banco } from "./banco"
 
+let nubank: Banco = new Banco()
 
-let bb: Banco = new Banco()
 function main() {
-    showMenu()
-    let opcao: number = opcaoValida()
-
-
-    while (opcao != 0) {
-        if (opcao == 1) {
-            inserir()
+    let opcao: string = ""
+    let i = 0
+    do {
+        console.log('\n1 - Cadastrar\t2 - Consultar\t3 - Sacar\n' +
+        '\n4 - Depositar\t5 - Excluir\t6 - Transferir\n' +
+        '\n7 - Totalizações\n' +
+        '\n0 - Sair\n');
+        opcao = input("Opção:");
+        switch (opcao) {
+            case "1":
+                inserir();
+                break
+            case "2":
+                // consultar();
+                break
+        }
+        input("\nOperação finalizada. Digite <enter>...");
+        
+        i++;
+        if (i >= 2) {
+            console.clear()
         }
 
-        opcao = opcaoValida()
-    }
+        } while (opcao != "0");
+        console.log("Aplicação encerrada");
 
-}
-
-function showMenu() {
-    let menu = "1 - Cadastrar conta\t2 - Consultar conta\t3 - Realizar saque\n"
-    menu += "\n4 - Realisar depósito\t5 - Excluir conta\tTransferir\n"
-    menu += "\n7 - Totalizações\n"
-    menu += "\n0 -  Sair\n"
-    console.log(menu)
-}
-
-function opcaoValida(): number {
-    let opcao: number = getNumber("\nDigite uma opção: ")
-
-    while (opcao < 0 || opcao > 7) {
-        console.log("\nOpção inválida!")
-        opcao = getNumber("\nDigite uma opção: ")
-    }
-
-    return opcao
-}
-
-const continuar = () => {
-    let pergunta = input("\nDeseja continuar? (s/n) ");
-
-    while (pergunta !== "s" && pergunta !== "n") {
-        console.log("\nOpção inválida!");
-        pergunta = input("\nDeseja continuar? (s/n) ");
-    }
-
-    if (pergunta === "n") {
         tchau();
-        process.exit(0);
-    } else {
-        let pergunta2 = input("\nDeseja limpar a tela? (s/n) ");
-
-        while (pergunta2 !== "s" && pergunta2 !== "n") {
-            pergunta2 = input("\nDeseja limpar a tela? (s/n) ");
-            if (pergunta2 !== "s" && pergunta2 !== "n") {
-                console.log("\nOpção inválida!");
-            }
-        }
-
-        if (pergunta2 == "s") {
-            console.clear();
-        }
-    }
-
-    return pergunta;
 }
+
+
+function inserir() {
+    console.log("\nCadastrar Conta\n")
+    let numero: string = input("Digite o numero da conta: ")
+
+    let conta: Conta = new Conta(numero, 0)
+    nubank.inserirConta(conta)
+    console.log(nubank.toString(conta))
+}
+
 
 const tchau = () => {
     const tchaus = [
@@ -103,17 +81,7 @@ const tchau = () => {
     console.log(
         `\n${corAleatoria}`,
         `${tchauAleatorio} \n"${mensagemAleatoria}"`
-    );
+    )
 };
-
-
-function inserir() {
-    console.log("\nCadastrar conta\n")
-    let numero: string = input("Digite o número da conta: ")
-
-    let conta: Conta;
-    conta = new Conta(numero, 0)
-    bb.inserirConta(conta)
-}
 
 main()

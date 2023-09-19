@@ -3,11 +3,6 @@ import { question } from "readline-sync";
 export const input = (texto: string) => {
     let resposta: string = question(texto)
 
-    while (resposta == "") {
-        console.log("Digite algo, tente novamente.")
-        resposta = question(texto)
-    }
-
     return resposta
 }
 
