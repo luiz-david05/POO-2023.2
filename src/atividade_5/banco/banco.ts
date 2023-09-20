@@ -9,6 +9,7 @@ export class Conta {
 
     sacar (valor: number): boolean {
         if (this.saldo - valor < 0){
+            console.log("\nOperação não concluída, saldo insuficiente!")
             return false
         }
 
@@ -42,11 +43,11 @@ export class Banco {
         let indiceAlvo = this.consultarContaPorIndice(conta.numero)
 
         if (indiceAlvo != -1){
-            console.log("A conta já existe!")
-            return
+            console.log("\nA conta já existe!")
         }
-
-        this.contas.push(conta)
+        else if (indiceAlvo == -1) {
+            this.contas.push(conta)
+        }
     }
     
     calcularQtdContas(): number{
@@ -112,7 +113,7 @@ export class Banco {
             conta.sacar(valor)
         }
         else if (indiceAlvo == -1) {
-            console.log(`A conta "${numero}" não existe!`)
+            console.log(`\nA conta "${numero}" não existe!`)
         }
     }
 
@@ -126,11 +127,14 @@ export class Banco {
 
             contaOrigem.transferir(contaDestino, valor)
         }
+        else {
+            console.log("\nOperação não concluída!")
+        }
     }
 
     exibirContas(){
         for (let conta of this.contas){
-            console.log(conta)
+            console.log(this.toString(conta))
         }
     }
 
@@ -154,8 +158,31 @@ export class Banco {
 
         return saldoTotalContas / qtdContas
     }
+
+    consultarSaldo(numero: string) {
+        let indice: number = this.consultarContaPorIndice(numero)
+    
+        if (indice != -1) {
+            console.log(this.toString(this.contas[indice]))
+        }
+        else if (indice == -1) {
+            console.log("\nConta não encontrada!")
+        }
+    }
+
+    depositar(numero: string, valor: number) {
+        let indice: number = this.consultarContaPorIndice(numero)
+        let conta: Conta = this.contas[indice]
+
+        if (indice != -1) {
+            conta.depositar(valor)
+        }
+        else if (indice == -1) {
+            console.log("\nA conta não existe!")
+        }
+    }
     
     toString(conta: Conta): string {
-        return `\nConta n°: "${conta.numero}"\nSaldo: R$ ${conta.consultarSaldo().toFixed(2)}"`
+        return `\nConta n°: "${conta.numero}"\nSaldo: R$ ${conta.consultarSaldo().toFixed(2)}`
     }
 }

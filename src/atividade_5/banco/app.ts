@@ -1,23 +1,40 @@
-import { input } from "./entrada_utils"
+import { input, getNumber } from "./entrada_utils"
 import { Conta, Banco } from "./banco"
 
 let nubank: Banco = new Banco()
+nubank.inserirConta(new Conta("1111-1", 0))
+nubank.inserirConta(new Conta("1111-2", 0))
 
 function main() {
-    let opcao: string = ""
+    let opcao: number
     let i = 0
     do {
         console.log('\n1 - Cadastrar\t2 - Consultar\t3 - Sacar\n' +
         '\n4 - Depositar\t5 - Excluir\t6 - Transferir\n' +
         '\n7 - Totalizações\n' +
         '\n0 - Sair\n');
-        opcao = input("Opção:");
+        opcao = getNumber("Opção: ");
         switch (opcao) {
-            case "1":
+            case 1:
                 inserir();
                 break
-            case "2":
-                // consultar();
+            case 2:
+                consultar();
+                break
+            case 3:
+                sacar()
+                break
+            case 4:
+                depositar()
+                break
+            case 5:
+                excluir()
+                break
+            case 6:
+                transferir()
+                break
+            case 7:
+                totalizacoes()
                 break
         }
         input("\nOperação finalizada. Digite <enter>...");
@@ -27,22 +44,66 @@ function main() {
             console.clear()
         }
 
-        } while (opcao != "0");
-        console.log("Aplicação encerrada");
+        } while (opcao != 0);
 
+        console.log("Aplicação encerrada");
         tchau();
 }
 
 
 function inserir() {
     console.log("\nCadastrar Conta\n")
-    let numero: string = input("Digite o numero da conta: ")
+    let numero: string = input("Digite o número da conta: ")
 
     let conta: Conta = new Conta(numero, 0)
     nubank.inserirConta(conta)
-    console.log(nubank.toString(conta))
 }
 
+function consultar() {
+    console.log("\nConsultar Saldo\n")
+    let numero: string = input("Digite o número da conta: ")
+
+    nubank.consultarSaldo(numero)
+}
+
+function sacar() {
+    console.log("\nSacar valor da Conta\n")
+    let numero: string = input("Digite o número da conta: ")
+    let valor: number = getNumber("Digite o valor do saque: ")
+
+    nubank.sacar(numero, valor)
+}
+
+function depositar() {
+    console.log("\nDepositar valor na Conta\n")
+    let numero: string = input("Digite o número da conta: ")
+    let valor: number = getNumber("Digite o valor do deposito: ")
+
+    nubank.depositar(numero, valor)
+}
+
+function excluir() {
+    console.log("\nExcluir Conta\n")
+    let numero: string = input("Digite o número da conta: ")
+
+    nubank.excluirConta(numero)
+}
+
+function transferir() {
+    console.log("\nTrânsferir entre Contas\n")
+    let numOrigem: string = input("Digite o número da conta de origem: ")
+    let numDestino: string = input("Digite o número da conta de destino: ")
+    let valor: number = getNumber("Valor da trânsferencia: ")
+
+    nubank.transferir(numOrigem, numDestino, valor)
+}
+
+function totalizacoes() {
+    nubank.exibirContas()
+    console.log(`\nQuantidade de contas no Banco: ${nubank.calcularQtdContas()}`)
+    console.log(`\nSaldo total do Banco: ${nubank.calcularSaldoBanco().toFixed(2)}`)
+    console.log(`\nValor médio do saldo das contas: ${nubank.mediaSaldo().toFixed(2)}`)
+}
 
 const tchau = () => {
     const tchaus = [

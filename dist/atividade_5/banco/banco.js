@@ -7,6 +7,7 @@ export class Conta {
     }
     sacar(valor) {
         if (this.saldo - valor < 0) {
+            console.log("\nOperação não concluída, saldo insuficiente!");
             return false;
         }
         this.saldo -= valor;
@@ -31,10 +32,11 @@ export class Banco {
     inserirConta(conta) {
         let indiceAlvo = this.consultarContaPorIndice(conta.numero);
         if (indiceAlvo != -1) {
-            console.log("A conta já existe!");
-            return;
+            console.log("\nA conta já existe!");
         }
-        this.contas.push(conta);
+        else if (indiceAlvo == -1) {
+            this.contas.push(conta);
+        }
     }
     calcularQtdContas() {
         return this.contas.length;
@@ -86,7 +88,7 @@ export class Banco {
             conta.sacar(valor);
         }
         else if (indiceAlvo == -1) {
-            console.log(`A conta "${numero}" não existe!`);
+            console.log(`\nA conta "${numero}" não existe!`);
         }
     }
     transferir(numCred, numDeb, valor) {
@@ -97,10 +99,13 @@ export class Banco {
             let contaDestino = this.contas[indiceDeb];
             contaOrigem.transferir(contaDestino, valor);
         }
+        else {
+            console.log("\nOperação não concluída!");
+        }
     }
     exibirContas() {
         for (let conta of this.contas) {
-            console.log(conta);
+            console.log(this.toString(conta));
         }
     }
     calcularSaldoBanco() {
@@ -118,7 +123,26 @@ export class Banco {
         }
         return saldoTotalContas / qtdContas;
     }
+    consultarSaldo(numero) {
+        let indice = this.consultarContaPorIndice(numero);
+        if (indice != -1) {
+            console.log(this.toString(this.contas[indice]));
+        }
+        else if (indice == -1) {
+            console.log("\nConta não encontrada!");
+        }
+    }
+    depositar(numero, valor) {
+        let indice = this.consultarContaPorIndice(numero);
+        let conta = this.contas[indice];
+        if (indice != -1) {
+            conta.depositar(valor);
+        }
+        else if (indice == -1) {
+            console.log("\nA conta não existe!");
+        }
+    }
     toString(conta) {
-        return `\nConta n°: "${conta.numero}"\nSaldo: R$ ${conta.consultarSaldo().toFixed(2)}"`;
+        return `\nConta n°: "${conta.numero}"\nSaldo: R$ ${conta.consultarSaldo().toFixed(2)}`;
     }
 }

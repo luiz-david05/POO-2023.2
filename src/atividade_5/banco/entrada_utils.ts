@@ -1,17 +1,19 @@
 import { question } from "readline-sync";
 
-export const input = (texto: string) => {
+
+export function input(texto: string): string {
     let resposta: string = question(texto)
 
     return resposta
-}
+} 
 
-export const getNumber = (texto: string) => {
+
+export function getNumber(texto: string): number {
     let n: number = Number(input(texto))
 
     while (isNaN(n)) {
-        console.log("Digite um número, tente novamente!")
-        n = Number(input(texto))
+        console.log("Entrada inválida, digite um número.")
+        n = getNumber(texto)
     }
 
     return n
