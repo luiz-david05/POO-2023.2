@@ -5,44 +5,53 @@ nubank.inserirConta(new Conta("081.232.321-76", 0, "Luiz"));
 nubank.inserirConta(new Conta("092.131.998-86", 0, "Camila"));
 function main() {
     let opcao;
-    let i = 0;
-    do {
-        console.log('\n1 - Cadastrar\t2 - Consultar\t3 - Sacar\n' +
-            '\n4 - Depositar\t5 - Excluir\t6 - Transferir\n' +
-            '\n7 - Totalizações\n' +
-            '\n0 - Sair\n');
-        opcao = getNumber("Opção: ");
-        switch (opcao) {
-            case 1:
-                inserir();
-                break;
-            case 2:
-                consultar();
-                break;
-            case 3:
-                sacar();
-                break;
-            case 4:
-                depositar();
-                break;
-            case 5:
-                excluir();
-                break;
-            case 6:
-                transferir();
-                break;
-            case 7:
-                totalizacoes();
-                break;
+    menu();
+    opcao = validarOpcao();
+    while (opcao != 0) {
+        if (opcao == 1) {
+            inserir();
         }
-        input("\nOperação finalizada. Digite <enter>...");
-        i++;
-        if (i >= 2) {
-            console.clear();
+        else if (opcao == 2) {
+            consultar();
         }
-    } while (opcao != 0);
+        else if (opcao == 3) {
+            sacar();
+        }
+        else if (opcao == 4) {
+            depositar();
+        }
+        else if (opcao == 5) {
+            excluir();
+        }
+        else if (opcao == 6) {
+            transferir();
+        }
+        else if (opcao == 7) {
+            totalizacoes();
+        }
+        input("\nAperte enter <- para continuar...");
+        if (opcao == 0) {
+            break;
+        }
+        limparTela();
+        menu();
+        opcao = validarOpcao();
+    }
     console.log("Aplicação encerrada");
     tchau();
+}
+function menu() {
+    console.log('\n1 - Cadastrar\t2 - Consultar\t3 - Sacar\n' +
+        '\n4 - Depositar\t5 - Excluir\t6 - Transferir\n' +
+        '\n7 - Totalizações\n' +
+        '\n0 - Sair\n');
+}
+function validarOpcao() {
+    let opcao = getNumber("Opção: ");
+    while (opcao < 0 || opcao > 7) {
+        opcao = getNumber("Digite uma opção válida: ");
+    }
+    return opcao;
 }
 function inserir() {
     console.log("\nCadastrar Conta\n");
@@ -50,10 +59,10 @@ function inserir() {
     let numero = input("Digite o número do cpf: ").trim();
     let tentativasRestantes = 3;
     while (!validarCPF(numero)) {
-        numero = input("Digite um número de cpf válido: ");
         console.log(`\nNumero de tentativas restantes: ${tentativasRestantes}`);
+        numero = input("Digite um número de cpf válido: ");
         tentativasRestantes--;
-        if (tentativasRestantes > 1) {
+        if (tentativasRestantes == 0) {
             console.log("Fim das tentativas!");
             break;
         }
@@ -127,6 +136,15 @@ const tchau = () => {
     const corAleatoria = cores[Math.floor(Math.random() * cores.length)];
     console.log(`\n${corAleatoria}`, `${tchauAleatorio} \n"${mensagemAleatoria}"`);
 };
+function limparTela() {
+    let ask = input("Limpar tela? [Y]/[N]: ").toLowerCase();
+    while (ask != "y" && ask != "n") {
+        ask = input("Limpar tela? [Y]/[N]: ").toLowerCase();
+    }
+    if (ask == "y") {
+        console.clear();
+    }
+}
 function validarCPF(cpf) {
     cpf = cpf.replace(/[^\d]+/g, '');
     if (cpf == '')
