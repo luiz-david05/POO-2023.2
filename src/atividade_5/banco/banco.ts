@@ -1,10 +1,12 @@
 export class Conta {
     numero: string; // = 0;
     saldo: number; // = 0;
+    nome: string;
 
-    constructor (numero: string, saldo: number) {
+    constructor (numero: string, saldo: number, nome: string) {
         this.numero = numero;
         this.saldo = saldo;
+        this.nome = nome
     }
 
     sacar (valor: number): boolean {
@@ -183,6 +185,6 @@ export class Banco {
     }
     
     toString(conta: Conta): string {
-        return `\nConta n°: "${conta.numero}"\nSaldo: R$ ${conta.consultarSaldo().toFixed(2)}`
+        return `\nCPF: "${conta.numero}"\nNome: ${conta.nome}\nSaldo: R$ ${conta.consultarSaldo().toFixed(2)}`
     }
 }

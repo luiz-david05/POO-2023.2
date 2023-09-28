@@ -1,9 +1,11 @@
 export class Conta {
     numero; // = 0;
     saldo; // = 0;
-    constructor(numero, saldo) {
+    nome;
+    constructor(numero, saldo, nome) {
         this.numero = numero;
         this.saldo = saldo;
+        this.nome = nome;
     }
     sacar(valor) {
         if (this.saldo - valor < 0) {
@@ -143,6 +145,6 @@ export class Banco {
         }
     }
     toString(conta) {
-        return `\nConta n°: "${conta.numero}"\nSaldo: R$ ${conta.consultarSaldo().toFixed(2)}`;
+        return `\nCPF: "${conta.numero}"\nNome: ${conta.nome}\nSaldo: R$ ${conta.consultarSaldo().toFixed(2)}`;
     }
 }

@@ -2,8 +2,8 @@ import { input, getNumber } from "./entrada_utils"
 import { Conta, Banco } from "./banco"
 
 let nubank: Banco = new Banco()
-nubank.inserirConta(new Conta("1111-1", 0))
-nubank.inserirConta(new Conta("1111-2", 0))
+nubank.inserirConta(new Conta("081.232.321-76", 0, "Luiz"))
+nubank.inserirConta(new Conta("092.131.998-86", 0, "Camila"))
 
 function main() {
     let opcao: number
@@ -53,22 +53,35 @@ function main() {
 
 function inserir() {
     console.log("\nCadastrar Conta\n")
-    let numero: string = input("Digite o número da conta: ")
+    let nome: string = input("Digite o nome do titular da conta: ").trim()
+    let numero: string = input("Digite o número do cpf: ").trim()
 
-    let conta: Conta = new Conta(numero, 0)
+    let tentativasRestantes = 2
+    while (!validarCPF(numero)) {
+        numero = input("Digite um número de cpf válido: ")
+        console.log(`\nNumero de tentativas restantes: ${tentativasRestantes}`)
+        tentativasRestantes --;
+
+        if (tentativasRestantes > 1) {
+            console.log("Fim das tentativas!")
+            break;
+        }
+    }
+
+    let conta: Conta = new Conta(numero, 0, nome)
     nubank.inserirConta(conta)
 }
 
 function consultar() {
     console.log("\nConsultar Saldo\n")
-    let numero: string = input("Digite o número da conta: ")
+    let numero: string = input("Digite o cpf: ")
 
     nubank.consultarSaldo(numero)
 }
 
 function sacar() {
     console.log("\nSacar valor da Conta\n")
-    let numero: string = input("Digite o número da conta: ")
+    let numero: string = input("Digite o cpf do titular: ")
     let valor: number = getNumber("Digite o valor do saque: ")
 
     nubank.sacar(numero, valor)
@@ -76,7 +89,7 @@ function sacar() {
 
 function depositar() {
     console.log("\nDepositar valor na Conta\n")
-    let numero: string = input("Digite o número da conta: ")
+    let numero: string = input("Digite o cpf do titular: ")
     let valor: number = getNumber("Digite o valor do deposito: ")
 
     nubank.depositar(numero, valor)
@@ -84,15 +97,15 @@ function depositar() {
 
 function excluir() {
     console.log("\nExcluir Conta\n")
-    let numero: string = input("Digite o número da conta: ")
+    let numero: string = input("Digite o cpf do titular: ")
 
     nubank.excluirConta(numero)
 }
 
 function transferir() {
     console.log("\nTrânsferir entre Contas\n")
-    let numOrigem: string = input("Digite o número da conta de origem: ")
-    let numDestino: string = input("Digite o número da conta de destino: ")
+    let numOrigem: string = input("Digite o cpf do titular da conta de origem: ")
+    let numDestino: string = input("Digite o cpf do titular da conta de destino: ")
     let valor: number = getNumber("Valor da trânsferencia: ")
 
     nubank.transferir(numOrigem, numDestino, valor)
@@ -144,5 +157,43 @@ const tchau = () => {
         `${tchauAleatorio} \n"${mensagemAleatoria}"`
     )
 };
+
+function validarCPF(cpf: string) {	
+	cpf = cpf.replace(/[^\d]+/g,'');	
+	if(cpf == '') return false;	
+	// Elimina CPFs invalidos conhecidos	
+	if (cpf.length != 11 || 
+		cpf == "00000000000" || 
+		cpf == "11111111111" || 
+		cpf == "22222222222" || 
+		cpf == "33333333333" || 
+		cpf == "44444444444" || 
+		cpf == "55555555555" || 
+		cpf == "66666666666" || 
+		cpf == "77777777777" || 
+		cpf == "88888888888" || 
+		cpf == "99999999999")
+			return false;		
+	// Valida 1º digito	
+	let add: number = 0;	
+	for (let i=0; i < 9; i ++)		
+		add += parseInt(cpf.charAt(i)) * (10 - i);	
+		let rev = 11 - (add % 11);	
+		if (rev == 10 || rev == 11)		
+			rev = 0;	
+		if (rev != parseInt(cpf.charAt(9)))		
+			return false;		
+	// Valida 2º digito	
+	add = 0;	
+	for (let i = 0; i < 10; i ++)		
+		add += parseInt(cpf.charAt(i)) * (11 - i);	
+	rev = 11 - (add % 11);	
+	if (rev == 10 || rev == 11)	
+		rev = 0;	
+	if (rev != parseInt(cpf.charAt(10)))
+		return false;		
+	return true;   
+}
+
 
 main()
