@@ -44,7 +44,7 @@ function main() {
         opcao = validarOpcao()
     }
 
-    console.log("Aplicação encerrada");
+    console.log("\nAplicação encerrada!");
     tchau();
 }
 
@@ -134,7 +134,7 @@ function totalizacoes() {
     console.log(`\nValor médio do saldo das contas: ${nubank.mediaSaldo().toFixed(2)}`)
 }
 
-// Arrays de mensagens e cores
+
 const tchaus = [
     "Tchau!",
     "Até mais!",
@@ -142,6 +142,7 @@ const tchaus = [
     "Até amanhã!",
     "Até breve!",
 ];
+
 
 const mensagens = [
     "Viver é o único dever que devemos aprender a cumprir.",
@@ -155,6 +156,7 @@ const mensagens = [
     "Aprenda a desapegar-se das coisas materiais, pois a verdadeira riqueza está na sabedoria e virtude.",
     "A felicidade não depende das circunstâncias externas, mas da forma como escolhemos reagir a elas.",
 ];
+
 
 const cores = [
     "\x1b[31m%s\x1b[0m",
@@ -192,6 +194,7 @@ function limparTela() {
         console.clear()
     }
 }
+
 
 function validarCPF(cpf: string) {	
 	cpf = cpf.replace(/[^\d]+/g,'');	

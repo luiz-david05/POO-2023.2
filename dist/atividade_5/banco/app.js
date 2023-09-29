@@ -37,7 +37,7 @@ function main() {
         menu();
         opcao = validarOpcao();
     }
-    console.log("Aplicação encerrada");
+    console.log("\nAplicação encerrada!");
     tchau();
 }
 function menu() {
@@ -105,7 +105,6 @@ function totalizacoes() {
     console.log(`\nSaldo total do Banco: ${nubank.calcularSaldoBanco().toFixed(2)}`);
     console.log(`\nValor médio do saldo das contas: ${nubank.mediaSaldo().toFixed(2)}`);
 }
-// Arrays de mensagens e cores
 const tchaus = [
     "Tchau!",
     "Até mais!",
