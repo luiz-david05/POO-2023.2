@@ -134,51 +134,58 @@ function totalizacoes() {
     console.log(`\nValor médio do saldo das contas: ${nubank.mediaSaldo().toFixed(2)}`)
 }
 
+// Arrays de mensagens e cores
+const tchaus = [
+    "Tchau!",
+    "Até mais!",
+    "Até logo!",
+    "Até amanhã!",
+    "Até breve!",
+];
+
+const mensagens = [
+    "Viver é o único dever que devemos aprender a cumprir.",
+    "Não existe um caminho mais curto para a própria felicidade do que fazer a felicidade dos outros.",
+    "O único tempo que temos é o presente. O passado se foi, o futuro ainda não chegou. Portanto, concentre-se no agora.",
+    "A verdadeira sabedoria está em reconhecer a própria ignorância.",
+    "A adversidade é um bom professor. Ela nos faz questionar nossas crenças e descobrir nossa força interior.",
+    "A felicidade não reside em possuir muito, mas em desejar pouco.",
+    "Não busque a aprovação dos outros. Seja verdadeiro consigo mesmo e viva de acordo com seus princípios.",
+    "A maior riqueza é ter paz de espírito e contentamento com o que se tem.",
+    "Aprenda a desapegar-se das coisas materiais, pois a verdadeira riqueza está na sabedoria e virtude.",
+    "A felicidade não depende das circunstâncias externas, mas da forma como escolhemos reagir a elas.",
+];
+
+const cores = [
+    "\x1b[31m%s\x1b[0m",
+    "\x1b[32m%s\x1b[0m",
+    "\x1b[33m%s\x1b[0m",
+    "\x1b[37m%s\x1b[0m",
+];
+
+
+function valorAleatorio(array) {
+    return array[Math.floor(Math.random() * array.length)];
+}
+
+
 const tchau = () => {
-    const tchaus = [
-        "Tchau!",
-        "Até mais!",
-        "Até logo!",
-        "Até amanhã!",
-        "Até breve!",
-    ];
-
-    const mensagens = [
-        "Viver é o único dever que devemos aprender a cumprir.",
-        "Não existe um caminho mais curto para a \nprópria felicidade do que fazer a felicidade dos outros.",
-        "O único tempo que temos é o presente. O \npassado se foi, o futuro ainda não chegou. Portanto, concentre-se no agora.",
-        "A verdadeira sabedoria está em reconhecer \na própria ignorância.",
-        "A adversidade é um bom professor. Ela nos \nfaz questionar nossas crenças e descobrir nossa força interior.",
-        "A felicidade não reside em possuir muito, \nmas em desejar pouco.",
-        "Não busque a aprovação dos outros. Seja \nverdadeiro consigo mesmo e viva de acordo com seus princípios.",
-        "A maior riqueza é ter paz de espírito e \ncontentamento com o que se tem.",
-        "Aprenda a desapegar-se das coisas materiais, \npois a verdadeira riqueza está na sabedoria e virtude.",
-        "A felicidade não depende das circunstâncias externas, \nmas da forma como escolhemos reagir a elas.",
-    ];
-
-    const cores = [
-        "\x1b[31m%s\x1b[0m",
-        "\x1b[32m%s\x1b[0m",
-        "\x1b[33m%s\x1b[0m",
-        "\x1b[37m%s\x1b[0m",
-    ];
-
-    const tchauAleatorio = tchaus[Math.floor(Math.random() * tchaus.length)];
-    const mensagemAleatoria =
-        mensagens[Math.floor(Math.random() * mensagens.length)];
-    const corAleatoria = cores[Math.floor(Math.random() * cores.length)];
+    const tchauAleatorio = valorAleatorio(tchaus);
+    const mensagemAleatoria = valorAleatorio(mensagens);
+    const corAleatoria = valorAleatorio(cores);
 
     console.log(
         `\n${corAleatoria}`,
         `${tchauAleatorio} \n"${mensagemAleatoria}"`
-    )
+    );
 };
 
+
 function limparTela() {
-    let ask: string = input("Limpar tela? [Y]/[N]: ").toLowerCase()
+    let ask: string = input("\nLimpar tela? [Y]/[N]: ").toLowerCase()
 
     while (ask != "y" && ask != "n") {
-        ask = input("Limpar tela? [Y]/[N]: ").toLowerCase()
+        ask = input("\nLimpar tela? [Y]/[N]: ").toLowerCase()
     }
 
     if (ask == "y") {
