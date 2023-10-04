@@ -1,8 +1,6 @@
-import { input, getNumber } from "./entrada_utils";
-import { Conta, Banco } from "./banco";
+import { getNumber, input } from '../../atividade_5/banco/entrada_utils';
+import { Conta, Banco } from './banco';
 let nubank = new Banco();
-nubank.inserirConta(new Conta("081.232.321-76", 0, "Luiz"));
-nubank.inserirConta(new Conta("092.131.998-86", 0, "Camila"));
 function main() {
     let opcao;
     menu();
@@ -67,13 +65,13 @@ function inserir() {
             break;
         }
     }
-    let conta = new Conta(numero, 0, nome);
+    let conta = new Conta(nome, numero, 0);
     nubank.inserirConta(conta);
 }
 function consultar() {
     console.log("\nConsultar Saldo\n");
     let numero = input("Digite o cpf: ");
-    nubank.consultarSaldo(numero);
+    nubank.consultar(numero);
 }
 function sacar() {
     console.log("\nSacar valor da Conta\n");
@@ -101,9 +99,9 @@ function transferir() {
 }
 function totalizacoes() {
     nubank.exibirContas();
-    console.log(`\nQuantidade de contas no Banco: ${nubank.calcularQtdContas()}`);
-    console.log(`\nSaldo total do Banco: ${nubank.calcularSaldoBanco().toFixed(2)}`);
-    console.log(`\nValor médio do saldo das contas: ${nubank.mediaSaldo().toFixed(2)}`);
+    console.log(`\nQuantidade de contas no Banco: ${nubank.totalContas}`);
+    console.log(`\nSaldo total do Banco: ${nubank.total.toFixed(2)}`);
+    console.log(`\nValor médio do saldo das contas: ${nubank.mediaDepositada.toFixed(2)}`);
 }
 const tchaus = [
     "Tchau!",
