@@ -6,14 +6,28 @@ class Conta {
         this._nome = _nome;
         this._numero = _numero;
         this._saldo = _saldo;
+        this._historico = [`Conta criada: +${_saldo}`];
     }
+    _historico = [];
     sacar(valor) {
-        if (this._saldo >= valor) {
-            this._saldo -= valor;
+        if (valor <= 0) {
+            console.log("O valor do saque deve ser maior que zero.");
+            return;
         }
+        if (this._saldo < valor) {
+            console.log("Saldo insuficiente para realizar o saque.");
+            return;
+        }
+        this._saldo -= valor;
+        this._historico.push(`Saque: -${valor}`);
     }
     depositar(valor) {
+        if (valor <= 0) {
+            console.log("O valor do depósito deve ser maior que zero.");
+            return;
+        }
         this._saldo += valor;
+        this._historico.push(`Depósito: +${valor}`);
     }
     get saldo() {
         return this._saldo;
@@ -21,12 +35,16 @@ class Conta {
     transferir(contaDestino, valor) {
         this.sacar(valor);
         contaDestino.depositar(valor);
+        this._historico.push(`Transferência: -${valor} para conta ${contaDestino._numero}`);
     }
     get numero() {
         return this._numero;
     }
     get nome() {
         return this._nome;
+    }
+    get historico() {
+        return this._historico;
     }
 }
 class Banco {
@@ -55,11 +73,11 @@ class Banco {
     inserirConta(conta) {
         let indice = this.consultarPorIndice(conta.numero);
         if (indice != -1) {
-            // sem nececidade real de um print informativo, mas para fins de teste é válido
             console.log("\nA conta já existe!");
         }
         else if (indice == -1) {
             this._contas.push(conta);
+            console.log("\nConta inserida com sucesso!");
         }
     }
     excluirConta(numero) {
@@ -81,6 +99,7 @@ class Banco {
         if (indice != -1) {
             let conta = this._contas[indice];
             conta.sacar(valor);
+            console.log("\nSaque realizado com sucesso!");
         }
         else if (indice == -1) {
             //
@@ -92,6 +111,7 @@ class Banco {
         if (indice != -1) {
             let conta = this._contas[indice];
             conta.depositar(valor);
+            console.log("\nDepósito realizado com sucesso!");
         }
         else if (indice == -1) {
             //
@@ -101,14 +121,24 @@ class Banco {
     transferir(numCred, numDeb, valor) {
         let indiceCred = this.consultarPorIndice(numCred);
         let indiceDeb = this.consultarPorIndice(numDeb);
-        if (indiceCred != -1 && indiceDeb != -1) {
-            let contaOrigem = this._contas[indiceCred];
-            let contaDestino = this._contas[indiceDeb];
-            contaOrigem.transferir(contaDestino, valor);
+        if (indiceCred !== -1 && indiceDeb !== -1) {
+            if (valor <= 0) {
+                console.log("\nO valor da transferência deve ser maior que zero.");
+            }
+            else {
+                let contaOrigem = this._contas[indiceCred];
+                let contaDestino = this._contas[indiceDeb];
+                if (contaOrigem.saldo < valor) {
+                    console.log("\nSaldo insuficiente para realizar a transferência.");
+                }
+                else {
+                    contaOrigem.transferir(contaDestino, valor);
+                    console.log("\nTransferência realizada com sucesso!");
+                }
+            }
         }
         else {
-            //
-            console.log("\nOperação não concluída!");
+            console.log("\nConta de origem ou conta de destino não existem!");
         }
     }
     toString(conta) {
@@ -129,6 +159,13 @@ class Banco {
         for (let conta of this._contas) {
             console.log(this.toString(conta));
         }
+    }
+    consultarHistorico(numero) {
+        let indice = this.consultarPorIndice(numero);
+        if (indice != -1) {
+            return this._contas[indice].historico;
+        }
+        return [];
     }
 }
 export { Conta, Banco };

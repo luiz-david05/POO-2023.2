@@ -1,5 +1,5 @@
-import { getNumber, input } from '../../atividade_5/banco/entrada_utils';
-import { Conta, Banco } from './banco';
+import { getNumber, input } from '../../atividade_5/banco/entrada_utils.js';
+import { Conta, Banco } from './banco.js';
 let nubank = new Banco();
 function main() {
     let opcao;
@@ -27,6 +27,9 @@ function main() {
         else if (opcao == 7) {
             totalizacoes();
         }
+        else if (opcao == 8) {
+            historico();
+        }
         input("\nAperte enter <- para continuar...");
         if (opcao == 0) {
             break;
@@ -36,17 +39,16 @@ function main() {
         opcao = validarOpcao();
     }
     console.log("\nAplicação encerrada!");
-    tchau();
 }
 function menu() {
     console.log('\n1 - Cadastrar\t2 - Consultar\t3 - Sacar\n' +
         '\n4 - Depositar\t5 - Excluir\t6 - Transferir\n' +
-        '\n7 - Totalizações\n' +
+        '\n7 - Totalizações\t8 - Histórico\n' +
         '\n0 - Sair\n');
 }
 function validarOpcao() {
     let opcao = getNumber("Opção: ");
-    while (opcao < 0 || opcao > 7) {
+    while (opcao < 0 || opcao > 8) {
         opcao = getNumber("Digite uma opção válida: ");
     }
     return opcao;
@@ -54,11 +56,11 @@ function validarOpcao() {
 function inserir() {
     console.log("\nCadastrar Conta\n");
     let nome = input("Digite o nome do titular da conta: ").trim();
-    let numero = input("Digite o número do cpf: ").trim();
+    let numero = input("Digite o número do CPF: ").trim();
     let tentativasRestantes = 3;
     while (!validarCPF(numero)) {
         console.log(`\nNumero de tentativas restantes: ${tentativasRestantes}`);
-        numero = input("Digite um número de cpf válido: ");
+        numero = input("Digite um número de CPF válido: ");
         tentativasRestantes--;
         if (tentativasRestantes == 0) {
             console.log("Fim das tentativas!");
@@ -70,30 +72,36 @@ function inserir() {
 }
 function consultar() {
     console.log("\nConsultar Saldo\n");
-    let numero = input("Digite o cpf: ");
-    nubank.consultar(numero);
+    let numero = input("Digite o CPF: ");
+    let conta = nubank.consultar(numero);
+    if (conta != null) {
+        console.log(nubank.toString(conta));
+    }
+    else if (conta == null) {
+        console.log("\nConta não encontrada!");
+    }
 }
 function sacar() {
     console.log("\nSacar valor da Conta\n");
-    let numero = input("Digite o cpf do titular: ");
+    let numero = input("Digite o CPF do titular: ");
     let valor = getNumber("Digite o valor do saque: ");
     nubank.sacar(numero, valor);
 }
 function depositar() {
     console.log("\nDepositar valor na Conta\n");
-    let numero = input("Digite o cpf do titular: ");
+    let numero = input("Digite o CPF do titular: ");
     let valor = getNumber("Digite o valor do deposito: ");
     nubank.depositar(numero, valor);
 }
 function excluir() {
     console.log("\nExcluir Conta\n");
-    let numero = input("Digite o cpf do titular: ");
+    let numero = input("Digite o CPF do titular: ");
     nubank.excluirConta(numero);
 }
 function transferir() {
     console.log("\nTrânsferir entre Contas\n");
-    let numOrigem = input("Digite o cpf do titular da conta de origem: ");
-    let numDestino = input("Digite o cpf do titular da conta de destino: ");
+    let numOrigem = input("Digite o CPF do titular da conta de origem: ");
+    let numDestino = input("Digite o CPF do titular da conta de destino: ");
     let valor = getNumber("Valor da trânsferencia: ");
     nubank.transferir(numOrigem, numDestino, valor);
 }
@@ -103,47 +111,19 @@ function totalizacoes() {
     console.log(`\nSaldo total do Banco: ${nubank.total.toFixed(2)}`);
     console.log(`\nValor médio do saldo das contas: ${nubank.mediaDepositada.toFixed(2)}`);
 }
-const tchaus = [
-    "Tchau!",
-    "Até mais!",
-    "Até logo!",
-    "Até amanhã!",
-    "Até breve!",
-];
-const mensagens = [
-    "Viver é o único dever que devemos aprender a cumprir.",
-    "Não existe um caminho mais curto para a própria felicidade do que fazer a felicidade dos outros.",
-    "O único tempo que temos é o presente. O passado se foi, o futuro ainda não chegou. Portanto, concentre-se no agora.",
-    "A verdadeira sabedoria está em reconhecer a própria ignorância.",
-    "A adversidade é um bom professor. Ela nos faz questionar nossas crenças e descobrir nossa força interior.",
-    "A felicidade não reside em possuir muito, mas em desejar pouco.",
-    "Não busque a aprovação dos outros. Seja verdadeiro consigo mesmo e viva de acordo com seus princípios.",
-    "A maior riqueza é ter paz de espírito e contentamento com o que se tem.",
-    "Aprenda a desapegar-se das coisas materiais, pois a verdadeira riqueza está na sabedoria e virtude.",
-    "A felicidade não depende das circunstâncias externas, mas da forma como escolhemos reagir a elas.",
-];
-const cores = [
-    "\x1b[31m%s\x1b[0m",
-    "\x1b[32m%s\x1b[0m",
-    "\x1b[33m%s\x1b[0m",
-    "\x1b[37m%s\x1b[0m",
-];
-function valorAleatorio(array) {
-    return array[Math.floor(Math.random() * array.length)];
+function historico() {
+    console.log("\nHistórico de operações de uma conta\n");
+    let numero = input("Digite o CPF do titular da conta: ");
+    let historico = nubank.consultarHistorico(numero);
+    console.log(historico);
 }
-const tchau = () => {
-    const tchauAleatorio = valorAleatorio(tchaus);
-    const mensagemAleatoria = valorAleatorio(mensagens);
-    const corAleatoria = valorAleatorio(cores);
-    console.log(`\n${corAleatoria}`, `${tchauAleatorio} \n"${mensagemAleatoria}"`);
-};
 function limparTela() {
     let ask = input("\nLimpar tela? [Y]/[N]: ").toLowerCase();
     while (ask != "y" && ask != "n") {
         ask = input("\nLimpar tela? [Y]/[N]: ").toLowerCase();
     }
     if (ask == "y") {
-        console.clear();
+        console.log('\n'.repeat(50));
     }
 }
 function validarCPF(cpf) {

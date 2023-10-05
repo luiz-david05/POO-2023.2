@@ -1,15 +1,35 @@
 class Conta {
-    constructor (private _nome: string, private _numero: string, private _saldo: number) {}
+    constructor (private _nome: string, private _numero: string, private _saldo: number) {
+        this._historico = [`Conta criada: +${_saldo}`]
+    }
 
-    public sacar (valor: number): void {
-        if (this._saldo >= valor) {
-            this._saldo -= valor
+    private _historico: string[] = []
+
+    public sacar(valor: number): void {
+        if (valor <= 0) {
+            console.log("O valor do saque deve ser maior que zero.");
+            return;
         }
+    
+        if (this._saldo < valor) {
+            console.log("Saldo insuficiente para realizar o saque.");
+            return;
+        }
+    
+        this._saldo -= valor;
+        this._historico.push(`Saque: -${valor}`)
     }
     
-    public depositar (valor: number): void {
+    public depositar(valor: number): void {
+        if (valor <= 0) {
+            console.log("O valor do depósito deve ser maior que zero.");
+            return;
+        }
+    
         this._saldo += valor;
+        this._historico.push(`Depósito: +${valor}`)
     }
+    
     
     public get saldo (): number {
         return this._saldo
@@ -18,6 +38,7 @@ class Conta {
     public transferir (contaDestino: Conta, valor: number): void{
         this.sacar(valor)
         contaDestino.depositar(valor)
+        this._historico.push(`Transferência: -${valor} para conta ${contaDestino._numero}`)
     }
 
     public get numero(): string {
@@ -26,6 +47,10 @@ class Conta {
 
     public get nome(): string {
         return this._nome
+    }
+
+    public get historico(): string[] {
+        return this._historico
     }
 }
 
@@ -64,11 +89,11 @@ class Banco {
         let indice = this.consultarPorIndice(conta.numero)
 
         if (indice != -1) {
-            // sem nececidade real de um print informativo, mas para fins de teste é válido
             console.log("\nA conta já existe!")
         }
         else if (indice == -1) {
             this._contas.push(conta)
+            console.log("\nConta inserida com sucesso!")
         }
     }
 
@@ -95,6 +120,7 @@ class Banco {
         if (indice != -1) {
             let conta: Conta = this._contas[indice]
             conta.sacar(valor)
+            console.log("\nSaque realizado com sucesso!");
         }
         else if (indice == -1) {
             //
@@ -108,6 +134,7 @@ class Banco {
         if (indice != -1) {
             let conta: Conta = this._contas[indice]
             conta.depositar(valor)
+            console.log("\nDepósito realizado com sucesso!");
         }
         else if (indice == -1) {
             //
@@ -118,16 +145,23 @@ class Banco {
     public transferir(numCred: string, numDeb: string, valor: number) {
         let indiceCred = this.consultarPorIndice(numCred)
         let indiceDeb = this.consultarPorIndice(numDeb)
-
-        if (indiceCred != -1 && indiceDeb != -1) {
-            let contaOrigem: Conta = this._contas[indiceCred]
-            let contaDestino: Conta = this._contas[indiceDeb]
-
-            contaOrigem.transferir(contaDestino, valor)
-        }
-        else {
-            //
-            console.log("\nOperação não concluída!")
+    
+        if (indiceCred !== -1 && indiceDeb !== -1) {
+            if (valor <= 0) {
+                console.log("\nO valor da transferência deve ser maior que zero.");
+            } else {
+                let contaOrigem: Conta = this._contas[indiceCred]
+                let contaDestino: Conta = this._contas[indiceDeb]
+    
+                if (contaOrigem.saldo < valor) {
+                    console.log("\nSaldo insuficiente para realizar a transferência.");
+                } else {
+                    contaOrigem.transferir(contaDestino, valor);
+                    console.log("\nTransferência realizada com sucesso!");
+                }
+            }
+        } else {
+            console.log("\nConta de origem ou conta de destino não existem!");
         }
     }
 
@@ -154,6 +188,16 @@ class Banco {
         for (let conta of this._contas) {
             console.log(this.toString(conta))
         }
+    }
+
+    public consultarHistorico(numero: string): string[] {
+        let indice = this.consultarPorIndice(numero)
+
+        if (indice != -1) {
+            return this._contas[indice].historico
+        }
+
+        return []
     }
 }
 
