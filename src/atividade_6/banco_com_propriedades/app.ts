@@ -129,7 +129,7 @@ function transferir() {
     console.log("\nTrânsferir entre Contas\n")
     let numOrigem: string = input("Digite o CPF do titular da conta de origem: ")
     let numDestino: string = input("Digite o CPF do titular da conta de destino: ")
-    let valor: number = getNumber("Valor da trânsferencia: ")
+    let valor: number = getNumber("Valor da transferência: ")
 
     nubank.transferir(numOrigem, numDestino, valor)
 }
