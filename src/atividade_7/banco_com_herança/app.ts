@@ -34,7 +34,7 @@ function main() {
             historico()
         }
         else if (opcao == 9) {
-
+            renderJuros()
         }
 
         input("\nAperte enter <- para continuar...")
@@ -100,7 +100,7 @@ function inserir() {
     }
     else if (tipo == 'CI') {
         let taxaDesconto = getNumber("Taxa de desconto: ") / 100
-        // conta = new ContaImposto 
+        conta = new ContaImposto(nome, numero, 0, taxaDesconto) 
     }
 
     nubank.inserirConta(conta)

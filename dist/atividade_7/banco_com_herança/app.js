@@ -1,5 +1,5 @@
-import { getNumber, input } from '../../atividade_5/banco/entrada_utils';
-import { Conta, Banco, Poupanca } from './banco';
+import { getNumber, input } from '../../atividade_5/banco/entrada_utils.js';
+import { Conta, Banco, Poupanca, ContaImposto } from './banco.js';
 let nubank = new Banco();
 function main() {
     let opcao;
@@ -31,6 +31,7 @@ function main() {
             historico();
         }
         else if (opcao == 9) {
+            renderJuros();
         }
         input("\nAperte enter <- para continuar...");
         if (opcao == 0) {
@@ -80,7 +81,7 @@ function inserir() {
     }
     else if (tipo == 'CI') {
         let taxaDesconto = getNumber("Taxa de desconto: ") / 100;
-        // conta = new ContaImposto 
+        conta = new ContaImposto(nome, numero, 0, taxaDesconto);
     }
     nubank.inserirConta(conta);
 }
