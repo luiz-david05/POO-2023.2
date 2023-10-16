@@ -1,5 +1,6 @@
-import { getNumber, input } from '../../atividade_5/banco/entrada_utils.js';
-import { Conta, Banco, Poupanca, ContaImposto } from './banco.js';
+import { getNumber, input } from '../../atividade_5/banco/entrada_utils';
+import { Conta, Banco, Poupanca, ContaImposto } from './banco';
+import { readFileSync } from 'fs';
 let nubank = new Banco();
 function main() {
     let opcao;
@@ -33,6 +34,8 @@ function main() {
         else if (opcao == 9) {
             renderJuros();
         }
+        else if (opcao == 10) {
+        }
         input("\nAperte enter <- para continuar...");
         if (opcao == 0) {
             break;
@@ -47,18 +50,19 @@ function menu() {
     console.log('\n1 - Cadastrar\t2 - Consultar\t3 - Sacar\n' +
         '\n4 - Depositar\t5 - Excluir\t6 - Transferir\n' +
         '\n7 - Totalizações\t8 - Histórico\t9 - Render Juros\n' +
+        '\n10 - Recuperar e Cadastrar Contas do Arquivo\t11 - Cadastrar Nova Conta No Arquivo' +
         '\n0 - Sair\n');
 }
 function validarOpcao() {
     let opcao = getNumber("Opção: ");
-    while (opcao < 0 || opcao > 9) {
+    while (opcao < 0 || opcao > 11) {
         opcao = getNumber("Digite uma opção válida: ");
     }
     return opcao;
 }
 function inserir() {
     console.log("\nCadastrar Conta\n");
-    let nome = input("Digite o nome do titular da conta: ").trim();
+    let nome = input("Digite o nome do titular da conta: ");
     let numero = input("Digite o número do CPF: ").trim();
     let tentativasRestantes = 3;
     while (!validarCPF(numero)) {
@@ -75,12 +79,12 @@ function inserir() {
     if (tipo == 'C') {
         conta = new Conta(nome, numero, 0);
     }
-    else if (tipo == 'CP') {
-        let taxaJuros = getNumber("Taxa de juros: ") / 100;
+    else if (tipo == 'P') {
+        let taxaJuros = getNumber("Taxa de juros: ");
         conta = new Poupanca(nome, numero, 0, taxaJuros);
     }
     else if (tipo == 'CI') {
-        let taxaDesconto = getNumber("Taxa de desconto: ") / 100;
+        let taxaDesconto = getNumber("Taxa de desconto: ");
         conta = new ContaImposto(nome, numero, 0, taxaDesconto);
     }
     nubank.inserirConta(conta);
@@ -145,6 +149,15 @@ function limparTela() {
         console.log('\n'.repeat(20));
     }
 }
+function carregarArquivo(nomeArquivo) {
+    try {
+        const data = readFileSync(nomeArquivo, 'utf-8');
+        return data;
+    }
+    catch (error) {
+        console.log(error);
+    }
+}
 function validarCPF(cpf) {
     cpf = cpf.replace(/[^\d]+/g, '');
     if (cpf == '')
@@ -183,9 +196,9 @@ function validarCPF(cpf) {
     return true;
 }
 function getTipoConta() {
-    console.log("Tipo de conta: [C] - Corrente, [CP] Poupanca e [CI] Imposto: ");
+    console.log("Tipo de conta: [C] - Corrente, [P] Poupanca e [CI] Imposto: ");
     let tipo = input("Tipo: ");
-    while (tipo != 'C' && tipo != 'CP' && tipo != 'CI') {
+    while (tipo != 'C' && tipo != 'P' && tipo != 'CI') {
         tipo = input("Tipo: ");
     }
     return tipo;
