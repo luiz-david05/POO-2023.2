@@ -1,5 +1,5 @@
-import { getNumber, input } from '../../atividade_5/banco/entrada_utils.js';
-import { Conta, Banco, Poupanca, ContaImposto } from './banco.js';
+import { getNumber, input } from '../../atividade_5/banco/entrada_utils';
+import { Conta, Banco, Poupanca, ContaImposto } from './banco';
 import { readFileSync } from 'fs';
 let nubank = new Banco();
 function main() {
