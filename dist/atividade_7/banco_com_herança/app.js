@@ -1,5 +1,5 @@
-import { getNumber, input } from '../../atividade_5/banco/entrada_utils';
-import { Conta, Banco, Poupanca, ContaImposto } from './banco';
+import { getNumber, input } from '../../atividade_5/banco/entrada_utils.js';
+import { Conta, Banco, Poupanca, ContaImposto } from './banco.js';
 import { readFileSync } from 'fs';
 let nubank = new Banco();
 function main() {
@@ -50,7 +50,7 @@ function menu() {
     console.log('\n1 - Cadastrar\t2 - Consultar\t3 - Sacar\n' +
         '\n4 - Depositar\t5 - Excluir\t6 - Transferir\n' +
         '\n7 - Totalizações\t8 - Histórico\t9 - Render Juros\n' +
-        '\n10 - Recuperar e Cadastrar Contas do Arquivo\t11 - Cadastrar Nova Conta No Arquivo' +
+        '\n10 - Cadastrar Contas do Arquivo\t11 - Cadastrar Nova Conta No Arquivo' +
         '\n0 - Sair\n');
 }
 function validarOpcao() {

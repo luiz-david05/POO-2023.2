@@ -32,11 +32,6 @@ class Conta {
     public get saldo(): number {
         return this._saldo
     }
-
-    // ferindo o encapsulamento
-    public set saldo(valor: number) {
-        this._saldo = valor
-    }
     
     public transferir (contaDestino: Conta, valor: number): void{
         this.sacar(valor)
@@ -78,21 +73,15 @@ class ContaImposto extends Conta {
         return this._taxaDesconto
     }
 
-    public debitar(valor: number) {
-        const valorDescontado = valor * (1 + this._taxaDesconto / 100)
-        
-        if (valorDescontado <= this.saldo) {
-            this.saldo -= valorDescontado
-        }
-        else {
-            console.log("\nValor do imposto maior que o saldo, erro!")
-        }
+    depositar(valor: number) {
+        const valorDepositado = valor * (1 * this._taxaDesconto / 100)
+        super.depositar(valorDepositado)
     }
 
-    public depositar(valor: number) {
-        const valorDepositado = valor * (1 * this._taxaDesconto / 100)
-        this.saldo += valorDepositado
-    }
+    sacar(valor: number): void {
+		const valorDesconto = this.saldo * this._taxaDesconto / 100;
+		super.sacar(valor + valorDesconto);
+	}
 
 }
 
