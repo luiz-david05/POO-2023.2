@@ -1,4 +1,4 @@
-class Pessoa {
+export default class Pessoa {
     constructor (private _nome: string, private _sobrenome: string) {}
 
     get nome() {

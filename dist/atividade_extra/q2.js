@@ -1,4 +1,4 @@
-class Pessoa {
+export default class Pessoa {
     _nome;
     _sobrenome;
     constructor(_nome, _sobrenome) {
