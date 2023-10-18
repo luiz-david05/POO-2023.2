@@ -1,9 +1,8 @@
 import {getNumber, input} from '../../atividade_5/banco/entrada_utils'
 import {Conta, Banco, Poupanca, ContaImposto} from './banco'
-import { readFileSync } from 'fs'
+import * as fs from 'fs'
 
 let nubank: Banco = new Banco()
-
 function main() {
     let opcao: number
     menu()
@@ -38,7 +37,7 @@ function main() {
             renderJuros()
         }
         else if (opcao == 10) {
-
+            lerArquivo()
         }
 
         input("\nAperte enter <- para continuar...")
@@ -61,14 +60,14 @@ function menu() {
         '\n1 - Cadastrar\t2 - Consultar\t3 - Sacar\n' +
         '\n4 - Depositar\t5 - Excluir\t6 - Transferir\n' +
         '\n7 - Totalizações\t8 - Histórico\t9 - Render Juros\n' +
-        '\n10 - Cadastrar Contas do Arquivo\t11 - Cadastrar Nova Conta No Arquivo'+
+        '\n10 - Cadastrar Contas do Arquivo'+
         '\n0 - Sair\n'
         )
 }
 
 function validarOpcao() {
     let opcao: number =  getNumber("Opção: ")
-    while (opcao < 0 || opcao > 11) {
+    while (opcao < 0 || opcao > 10) {
         opcao = getNumber("Digite uma opção válida: ")
     }
 
@@ -190,17 +189,6 @@ function limparTela() {
     }
 }
 
-function carregarArquivo(nomeArquivo: string) {
-    try {
-        const data = readFileSync(nomeArquivo, 'utf-8')
-        return data
-    }
-    catch (error) {
-        console.log(error)
-    }
-}
-
-
 function validarCPF(cpf: string) {	
 	cpf = cpf.replace(/[^\d]+/g,'');	
 	if(cpf == '') return false;	
@@ -247,6 +235,27 @@ function getTipoConta(): string {
     }
 
     return tipo
+}
+
+
+function lerArquivo() {
+    let contas: string[] = fs.readFileSync('./contas.txt').toString().split('\n')
+
+    for (let conta of contas) {
+        let dadosConta = conta.split(';')
+
+        let [nome, cpf, saldo, tipo, taxa]: string[] = dadosConta
+
+        let contaNova: Conta =  new Conta(nome, cpf, Number(saldo))
+        if (tipo == 'P') {
+            contaNova = new Poupanca(nome, cpf, Number(saldo), Number(taxa))
+        }
+        else if (tipo == 'CI') {
+            contaNova = new ContaImposto(nome, cpf, Number(saldo), Number(taxa))
+        }
+
+        nubank.inserirConta(contaNova)
+    }
 }
 
 main()

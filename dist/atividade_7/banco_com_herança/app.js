@@ -1,6 +1,6 @@
-import { getNumber, input } from '../../atividade_5/banco/entrada_utils';
-import { Conta, Banco, Poupanca, ContaImposto } from './banco';
-import { readFileSync } from 'fs';
+import { getNumber, input } from '../../atividade_5/banco/entrada_utils.js';
+import { Conta, Banco, Poupanca, ContaImposto } from './banco.js';
+import * as fs from 'fs';
 let nubank = new Banco();
 function main() {
     let opcao;
@@ -35,6 +35,7 @@ function main() {
             renderJuros();
         }
         else if (opcao == 10) {
+            lerArquivo();
         }
         input("\nAperte enter <- para continuar...");
         if (opcao == 0) {
@@ -50,12 +51,12 @@ function menu() {
     console.log('\n1 - Cadastrar\t2 - Consultar\t3 - Sacar\n' +
         '\n4 - Depositar\t5 - Excluir\t6 - Transferir\n' +
         '\n7 - Totalizações\t8 - Histórico\t9 - Render Juros\n' +
-        '\n10 - Cadastrar Contas do Arquivo\t11 - Cadastrar Nova Conta No Arquivo' +
+        '\n10 - Cadastrar Contas do Arquivo' +
         '\n0 - Sair\n');
 }
 function validarOpcao() {
     let opcao = getNumber("Opção: ");
-    while (opcao < 0 || opcao > 11) {
+    while (opcao < 0 || opcao > 10) {
         opcao = getNumber("Digite uma opção válida: ");
     }
     return opcao;
@@ -149,15 +150,6 @@ function limparTela() {
         console.log('\n'.repeat(20));
     }
 }
-function carregarArquivo(nomeArquivo) {
-    try {
-        const data = readFileSync(nomeArquivo, 'utf-8');
-        return data;
-    }
-    catch (error) {
-        console.log(error);
-    }
-}
 function validarCPF(cpf) {
     cpf = cpf.replace(/[^\d]+/g, '');
     if (cpf == '')
@@ -202,5 +194,20 @@ function getTipoConta() {
         tipo = input("Tipo: ");
     }
     return tipo;
+}
+function lerArquivo() {
+    let contas = fs.readFileSync('./contas.txt').toString().split('\n');
+    for (let conta of contas) {
+        let dadosConta = conta.split(';');
+        let [nome, cpf, saldo, tipo, taxa] = dadosConta;
+        let contaNova = new Conta(nome, cpf, Number(saldo));
+        if (tipo == 'P') {
+            contaNova = new Poupanca(nome, cpf, Number(saldo), Number(taxa));
+        }
+        else if (tipo == 'CI') {
+            contaNova = new ContaImposto(nome, cpf, Number(saldo), Number(taxa));
+        }
+        nubank.inserirConta(contaNova);
+    }
 }
 main();
