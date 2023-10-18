@@ -1,5 +1,5 @@
 import Pessoa from "./q2.js";
-class Funcionario extends Pessoa {
+export default class Funcionario extends Pessoa {
     _mat;
     _salario;
     constructor(nome, sobrenome, _mat, _salario) {

@@ -1,6 +1,6 @@
 import Pessoa from "./q2";
 
-class Funcionario extends Pessoa {
+export default class Funcionario extends Pessoa {
     constructor (nome: string, sobrenome: string, private _mat: string, private _salario: number) {
         super(nome, sobrenome)
     }
@@ -13,11 +13,11 @@ class Funcionario extends Pessoa {
         return this._salario
     }
 
-    calcularSalarioPrimeiraParcela() {
+    calcularSalarioPrimeiraParcela(): number {
         return this.salario * 0.6
     }
 
-    calcularSalarioSegundaParcela() {
+    calcularSalarioSegundaParcela(): number {
         return this.salario * 0.4
     }
 }
