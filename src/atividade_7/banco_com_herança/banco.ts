@@ -5,11 +5,13 @@ class Conta {
 
     public sacar(valor: number): void {
         if (valor <= 0) {
+            //
             console.log("O valor do saque deve ser maior que zero.");
             return;
         }
     
         if (this._saldo < valor) {
+            //
             console.log("Saldo insuficiente para realizar o saque.");
             return;
         }
@@ -20,6 +22,7 @@ class Conta {
     
     public depositar(valor: number): void {
         if (valor <= 0) {
+            //
             console.log("O valor do depósito deve ser maior que zero.");
             return;
         }
@@ -103,7 +106,7 @@ class Banco {
         return indiceAlvo
     }
 
-    public consultar(numero: string): Conta {
+    consultar(numero: string): Conta {
         let contaAlvo!: Conta;
 
         for (let conta of this._contas) {
@@ -115,41 +118,40 @@ class Banco {
         return contaAlvo
     }
 
-    public inserirConta(conta: Conta) {
+    inserirConta(conta: Conta) {
         let indice = this.consultarPorIndice(conta.numero)
 
         if (indice != -1) {
+            //
             console.log("\nA conta já existe!")
+            return
         }
-        else if (indice == -1) {
-            this._contas.push(conta)
-            console.log("\nConta inserida com sucesso!")
-        }
+        
+        this._contas.push(conta)
+        //
+        console.log("\nConta inserida com sucesso!")
+        
     }
 
-    public excluirConta(numero: string) {
+    excluirConta(numero: string) {
         let indice = this.consultarPorIndice(numero)
-        let qtdContas = this._contas.length
 
         if (indice != -1) {
-            for (let i = indice; i < qtdContas; i++) {
-                this._contas[i] = this._contas[i + 1]
-            }
-
-            this._contas.pop()
+            this._contas.splice(indice, 1)
         }
-        else if (indice == -1) {
-            // 
+        else {
+            //
             console.log("\nImpossível excluir, conta inexistente!")
         }
     }
 
-    public sacar(numero: string, valor: number) {
+    sacar(numero: string, valor: number) {
         let indice = this.consultarPorIndice(numero)
         
         if (indice != -1) {
             let conta: Conta = this._contas[indice]
             conta.sacar(valor)
+            //
             console.log("\nSaque realizado com sucesso!");
         }
         else if (indice == -1) {
@@ -158,12 +160,13 @@ class Banco {
         }
     }
 
-    public depositar(numero: string, valor: number) {
+    depositar(numero: string, valor: number) {
         let indice = this.consultarPorIndice(numero)
         
         if (indice != -1) {
             let conta: Conta = this._contas[indice]
             conta.depositar(valor)
+            //
             console.log("\nDepósito realizado com sucesso!");
         }
         else if (indice == -1) {
@@ -172,30 +175,34 @@ class Banco {
         }
     }
 
-    public transferir(numCred: string, numDeb: string, valor: number) {
+    transferir(numCred: string, numDeb: string, valor: number) {
         let indiceCred = this.consultarPorIndice(numCred)
         let indiceDeb = this.consultarPorIndice(numDeb)
     
         if (indiceCred !== -1 && indiceDeb !== -1) {
             if (valor <= 0) {
+                //
                 console.log("\nO valor da transferência deve ser maior que zero.");
             } else {
                 let contaOrigem: Conta = this._contas[indiceCred]
                 let contaDestino: Conta = this._contas[indiceDeb]
     
                 if (contaOrigem.saldo < valor) {
+                    //
                     console.log("\nSaldo insuficiente para realizar a transferência.");
                 } else {
                     contaOrigem.transferir(contaDestino, valor);
+                    //
                     console.log("\nTransferência realizada com sucesso!");
                 }
             }
         } else {
+            //
             console.log("\nConta de origem ou conta de destino não existem!");
         }
     }
 
-    public renderJuros(numero: string) {
+    renderJuros(numero: string) {
         let indiceAlvo = this.consultarPorIndice(numero)
 
         if (indiceAlvo != -1) {
@@ -207,32 +214,65 @@ class Banco {
         }
     }
 
-    public toString(conta: Conta): string {
-        return `\nCPF: ${conta.numero}\nNome: ${conta.nome}\nSaldo: R$ ${conta.saldo.toFixed(2)}`
+    toString(conta: Conta): string {
+        let message = `\nCPF: ${conta.numero}\nNome: ${conta.nome}\nSaldo: R$ ${conta.saldo.toFixed(2)}`
+        if (conta instanceof Poupanca) {
+            message += `\nTaxa de Juros: ${conta.taxaJuros}%`
+        }
+        else if (conta instanceof ContaImposto) {
+            message += `\nTaxa de imposto: ${conta.taxaDesconto}%`
+        }
+        
+        return message
     }
 
-    public  get total(): number {
+    arquivoToString(conta: Conta) {
+        let tipo = 'C'
+        if (conta instanceof Poupanca) {
+            tipo = 'P'
+        } else if (conta instanceof ContaImposto) {
+            tipo = 'CI'
+        }
+        
+        // mudar exibição conforme padrão pré estabelecido
+        let contaString = `${tipo};${conta.numero};${conta.nome};${conta.saldo}`
+        if (tipo === 'P') {
+            contaString += `;${(conta as Poupanca).taxaJuros}`
+        } else if (tipo === 'CI') {
+            contaString += `;${(conta as ContaImposto).taxaDesconto}`
+        }
+    
+        return contaString;
+    }
+    
+
+    get total(): number {
         let totalDepositado = 0
         this._contas.forEach(conta => totalDepositado += conta.saldo);
 
         return totalDepositado
     }
 
-    public get totalContas(): number {
+    get totalContas(): number {
         return this._contas.length
     }
 
-    public get mediaDepositada(): number {
+    get mediaDepositada(): number {
         return this.total / this.totalContas
     }
 
-    public exibirContas() {
+    // adicionando um get para retornar as contas
+    get contas() {
+        return this._contas
+    }
+
+    exibirContas() {
         for (let conta of this._contas) {
             console.log(this.toString(conta))
         }
     }
 
-    public consultarHistorico(numero: string): string[] {
+    consultarHistorico(numero: string): string[] {
         let indice = this.consultarPorIndice(numero)
 
         if (indice != -1) {
@@ -245,3 +285,7 @@ class Banco {
 
 
 export {Conta, Banco, ContaImposto, Poupanca}
+
+
+/* Obs sobre os '//', console.log é útil para dar feedback para o usuário, mas em um ambiente real é mais eficiente retornar erro 
+ou sucesso/ boolean true or false, para um melhor controle do código. */

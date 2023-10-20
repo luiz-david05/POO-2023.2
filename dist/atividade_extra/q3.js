@@ -1,4 +1,4 @@
-import Pessoa from "./q2.js";
+import Pessoa from "./q2";
 export default class Funcionario extends Pessoa {
     _mat;
     _salario;

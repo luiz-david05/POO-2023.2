@@ -1,5 +1,5 @@
-import Funcionario from "./q3.js";
-import Professor from "./q4.js";
+import Funcionario from "./q3";
+import Professor from "./q4";
 class FolhaDePagamento {
     _pessoas = [];
     calcularPagamentos() {

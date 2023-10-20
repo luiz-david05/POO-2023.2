@@ -3,6 +3,7 @@ import {Conta, Banco, Poupanca, ContaImposto} from './banco'
 import * as fs from 'fs'
 
 let nubank: Banco = new Banco()
+
 function main() {
     let opcao: number
     menu()
@@ -37,7 +38,10 @@ function main() {
             renderJuros()
         }
         else if (opcao == 10) {
-            lerArquivo()
+            salvarContasArray()
+        }
+        else if (opcao == 11) {
+            gravarContasArquivo()
         }
 
         input("\nAperte enter <- para continuar...")
@@ -60,14 +64,14 @@ function menu() {
         '\n1 - Cadastrar\t2 - Consultar\t3 - Sacar\n' +
         '\n4 - Depositar\t5 - Excluir\t6 - Transferir\n' +
         '\n7 - Totalizações\t8 - Histórico\t9 - Render Juros\n' +
-        '\n10 - Cadastrar Contas do Arquivo'+
+        '\n10 - Cadastrar Contas do Arquivo\t11 - Salvar contas no arquivo\n'+
         '\n0 - Sair\n'
         )
 }
 
 function validarOpcao() {
     let opcao: number =  getNumber("Opção: ")
-    while (opcao < 0 || opcao > 10) {
+    while (opcao < 0 || opcao > 11) {
         opcao = getNumber("Digite uma opção válida: ")
     }
 
@@ -238,8 +242,8 @@ function getTipoConta(): string {
 }
 
 
-function lerArquivo() {
-    let contas: string[] = fs.readFileSync('./contas.txt').toString().split('\n')
+function salvarContasArray() {
+    const contas: string[] = fs.readFileSync('./contas.txt').toString().split('\n')
 
     for (let conta of contas) {
         let dadosConta = conta.split(';')
@@ -257,5 +261,21 @@ function lerArquivo() {
         nubank.inserirConta(contaNova)
     }
 }
+
+function gravarContasArquivo() {    
+    const contas = nubank.contas
+    const contasArquivo: string[] = fs.readFileSync('./contas.txt').toString().split('\n')
+
+    // aplicar método de verificação afim de evitar duplicação das contas
+    const contasParaEscrever = contas.map(conta => {
+        return nubank.arquivoToString(conta)
+    });
+
+    const novoConteudo = [...contasArquivo, ...contasParaEscrever].join('\n')
+
+    fs.writeFileSync('./contas.txt', novoConteudo)
+    console.log("Contas salvas no arquivo!")
+}
+
 
 main()

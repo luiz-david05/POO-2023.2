@@ -1,5 +1,5 @@
-import { getNumber, input } from '../../atividade_5/banco/entrada_utils.js';
-import { Conta, Banco, Poupanca, ContaImposto } from './banco.js';
+import { getNumber, input } from '../../atividade_5/banco/entrada_utils';
+import { Conta, Banco, Poupanca, ContaImposto } from './banco';
 import * as fs from 'fs';
 let nubank = new Banco();
 function main() {
@@ -35,7 +35,10 @@ function main() {
             renderJuros();
         }
         else if (opcao == 10) {
-            lerArquivo();
+            salvarContasArray();
+        }
+        else if (opcao == 11) {
+            gravarContasArquivo();
         }
         input("\nAperte enter <- para continuar...");
         if (opcao == 0) {
@@ -51,12 +54,12 @@ function menu() {
     console.log('\n1 - Cadastrar\t2 - Consultar\t3 - Sacar\n' +
         '\n4 - Depositar\t5 - Excluir\t6 - Transferir\n' +
         '\n7 - Totalizações\t8 - Histórico\t9 - Render Juros\n' +
-        '\n10 - Cadastrar Contas do Arquivo' +
+        '\n10 - Cadastrar Contas do Arquivo\t11 - Salvar contas no arquivo\n' +
         '\n0 - Sair\n');
 }
 function validarOpcao() {
     let opcao = getNumber("Opção: ");
-    while (opcao < 0 || opcao > 10) {
+    while (opcao < 0 || opcao > 11) {
         opcao = getNumber("Digite uma opção válida: ");
     }
     return opcao;
@@ -195,8 +198,8 @@ function getTipoConta() {
     }
     return tipo;
 }
-function lerArquivo() {
-    let contas = fs.readFileSync('./contas.txt').toString().split('\n');
+function salvarContasArray() {
+    const contas = fs.readFileSync('./contas.txt').toString().split('\n');
     for (let conta of contas) {
         let dadosConta = conta.split(';');
         let [nome, cpf, saldo, tipo, taxa] = dadosConta;
@@ -209,5 +212,16 @@ function lerArquivo() {
         }
         nubank.inserirConta(contaNova);
     }
+}
+function gravarContasArquivo() {
+    const contas = nubank.contas;
+    const contasArquivo = fs.readFileSync('./contas.txt').toString().split('\n');
+    // aplicar método de verificação afim de evitar duplicação das contas
+    const contasParaEscrever = contas.map(conta => {
+        return nubank.arquivoToString(conta);
+    });
+    const novoConteudo = [...contasArquivo, ...contasParaEscrever].join('\n');
+    fs.writeFileSync('./contas.txt', novoConteudo);
+    console.log("Contas salvas no arquivo!");
 }
 main();

@@ -1,4 +1,4 @@
-import Funcionario from "./q3.js";
+import Funcionario from "./q3";
 export default class Professor extends Funcionario {
     _titulacao;
     constructor(nome, sobrenome, matricula, salario, _titulacao) {
