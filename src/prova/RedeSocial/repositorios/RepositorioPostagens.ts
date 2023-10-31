@@ -1,6 +1,6 @@
 import { Perfil } from "../Perfil.js";
 import { Postagem } from "../Postagem.js";
-import { PostagemAvancada } from "../PostagemAvancada";
+import { PostagemAvancada } from "../PostagemAvancada.js";
 
 class RepositorioPostagens {
     private _postagens: Postagem[] = [];

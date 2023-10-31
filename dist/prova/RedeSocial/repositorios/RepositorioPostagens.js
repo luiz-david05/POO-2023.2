@@ -1,4 +1,4 @@
-import { PostagemAvancada } from "../PostagemAvancada";
+import { PostagemAvancada } from "../PostagemAvancada.js";
 class RepositorioPostagens {
     _postagens = [];
     incluir(postagem, perfil) {
