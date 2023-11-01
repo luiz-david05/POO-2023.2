@@ -1,7 +1,24 @@
-import { PostagemAvancada } from "../PostagemAvancada.js";
-class RepositorioPostagens {
+import { PostagemAvancada } from "../basicas/PostagemAvancada.js";
+export class RepositorioPostagens {
     _postagens = [];
     incluir(postagem, perfil) {
+        if (this.consultarPostagemPorIndice(postagem) == -1) {
+            this._postagens.push(postagem);
+            perfil.postagens.push(postagem);
+            return true;
+        }
+        return false;
+    }
+    consultarPostagemPorIndice(postagem) {
+        let indiceAlvo = -1;
+        for (let i = 0; i < this._postagens.length; i++) {
+            if (this._postagens[i].id == postagem.id &&
+                this._postagens[i].texto == postagem.texto) {
+                indiceAlvo = i;
+                break;
+            }
+        }
+        return indiceAlvo;
     }
     consultar(id, texto, hashtag, perfil) {
         const postagensFiltradas = [];

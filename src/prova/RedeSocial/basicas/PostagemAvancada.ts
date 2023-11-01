@@ -22,7 +22,7 @@ export class PostagemAvancada extends Postagem {
         return this._visualizacoesRestantes;
     }
 
-    qtdHashtags(): number {
+    private qtdHashtags(): number {
         return this._hashtags.length
     }
 

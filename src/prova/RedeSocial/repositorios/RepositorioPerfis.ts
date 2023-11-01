@@ -1,4 +1,4 @@
-import { Perfil } from "../Perfil.js";
+import { Perfil } from "../basicas/Perfil.js";
 
 export class RepositorioPerfis {
     private _perfis: Perfil[] = [];

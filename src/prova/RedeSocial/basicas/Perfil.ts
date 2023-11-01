@@ -18,4 +18,8 @@ export class Perfil {
     get email() {
         return this._email;
     }
+
+    get postagens() {
+        return this._postagens
+    }
 }
