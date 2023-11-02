@@ -15,13 +15,13 @@ export class RepositorioPostagens {
         return false;
     }
 
+    // consultando pelo id
     consultarPostagemPorIndice(postagem: Postagem) {
         let indiceAlvo = -1;
 
         for (let i = 0; i < this._postagens.length; i++) {
             if (
-                this._postagens[i].id == postagem.id &&
-                this._postagens[i].texto == postagem.texto
+                this._postagens[i].id == postagem.id
             ) {
                 indiceAlvo = i;
                 break;
