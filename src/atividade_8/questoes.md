@@ -10,13 +10,16 @@
 
 1.3) Tentar atribuir um valor diferente do tipo esperado.
 ```
+<br>
 
 2) O que é uma exceção em programação e como ela se diferencia de um erro comum ?
 
 ``` Resposta:
 
-Uma exceção é um evento que ocorre durante a execução de um programa, que interrompe o fluxo normal das instruções. Já um erro comum é um erro que ocorre durante a execução de um programa, que interrompe o fluxo normal das instruções.
+Uma exceção é um evento que ocorre durante a execução de um programa, que interrompe o fluxo normal das instruções.
+Já um erro comum é um erro que ocorre durante a execução de um programa, que interrompe o fluxo normal das instruções.
 ```
+<br>
 
 3) Como o TypeScript implementa o tratamento de exceções ?
 
@@ -24,8 +27,10 @@ Uma exceção é um evento que ocorre durante a execução de um programa, que i
 
 O TypeScript implementa o tratamento de exceções através do uso de blocos try/catch/finally.
 
-o try define o código a ser tentado (ou rodado), enquanto o catch define código a ser executado se uma exceção ocorrer, e o finally define o código a ser executado independentemente do resultado do bloco try/catch.
+o try define o código a ser tentado (ou rodado), enquanto o catch define código a ser executado se uma exceção ocorrer,
+e o finally define o código a ser executado independentemente do resultado do bloco try/catch.
 ```
+<br>
 
 4) Qual é a função do bloco try-catch no tratamento de exceções em TypeScript ?
 
@@ -36,14 +41,17 @@ O blobo try catch é usado para lidar com erros em um bloco específico de códi
 1. O try define o código a ser tentado (ou rodado).
 2. Se o try não conseguir rodar, ele pula para o catch.
 
-Em TypeScript, o parametro do catch é opcional, mas é uma boa prática usá-lo, pois ele é o objeto que contém informações sobre o erro. Alem disso o parametro do catch só pode ser do tipo any ou unknown.
+Em TypeScript, o parametro do catch é opcional, mas é uma boa prática usá-lo, pois ele é o objeto que
+contém informações sobre o erro. Alem disso o parametro do catch só pode ser do tipo any ou unknown.
 ```
+<br>
 
 5) Como você pode criar exceções personalizadas em TypeScript ?
 
 ``` Resposta:
 
-Para criar uma exceção personalizada em TypeScript, é necessário criar uma classe que herda da classe Error, e definir o construtor da classe para receber uma mensagem de erro.
+Para criar uma exceção personalizada em TypeScript, é necessário criar uma classe que herda da classe Error, 
+e definir o construtor da classe para receber uma mensagem de erro.
 
 ```
 Exemplo:
@@ -57,6 +65,7 @@ class MeuErro extends Error {
     }
 }
 ```
+<br>
 
 6) Quais são os tipos comuns de exceções que podem ser encontradas em aplicações TypeScript ?
 
@@ -69,6 +78,7 @@ class MeuErro extends Error {
 6. EvalError: Erro no eval().
 7. InternalError: Erro interno no motor do JavaScript.
 ```
+<br>
 
 7) Qual o papel do bloco finally no tratamento de exceções em TypeScript ?
 
@@ -77,7 +87,8 @@ class MeuErro extends Error {
 O finally sempre roda independente do bloco try/catch. 
 O código dentro do finally sempre roda, mesmo se ocorrer um erro no bloco try/catch ou gerar um return.
 
-O finally é opcional, mas é uma boa prática usá-lo, pois ele é usado para limpar recursos, como fechar um arquivo, fechar uma conexão de rede, etc.
+O finally é opcional, mas é uma boa prática usá-lo, pois ele é usado para limpar recursos,
+como fechar um arquivo, fechar uma conexão de rede, etc.
 
 Exemplo:
 ```
@@ -93,6 +104,7 @@ finally {
     // código a ser executado independente do resultado do bloco try/catch
 }
 ```
+<br>
 
 8) Como o tratamento de exceções em TypeScript ajuda a melhorar a robustez e a segurança de uma aplicação ?
 
@@ -101,6 +113,7 @@ finally {
 1. Possibilidade de criar exceções personalizadas, o que ajuda a desenvolver e debugar o código.
 2. Possibilidade de tratar erros de forma mais eficiente, o que ajuda a melhorar a segurança da aplicação.
 ```
+<br>
 
 9) Existem diferenças significativas no tratamento de exceções entre TypeScript e JavaScript ?
 
@@ -108,6 +121,7 @@ finally {
 
 Não, pois o TypeScript é um superset do JavaScript, ou seja, o TypeScript é um JavaScript com tipagem estática.
 ```
+<br>
 
 10) Como você pode testar e depurar eficientemente exceções em TypeScript ?
 
