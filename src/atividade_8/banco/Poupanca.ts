@@ -1,4 +1,4 @@
-import { Conta } from "./conta.js";
+import { Conta } from "./Conta.js";
 
 export class Poupanca extends Conta {
     constructor(
@@ -8,9 +8,14 @@ export class Poupanca extends Conta {
         private _taxaJuros: number
     ) {
         super(nome, numero, saldo);
+        this.validaValor(_taxaJuros)
     }
 
-    public get taxaJuros(): number {
+    get taxaJuros(): number {
         return this._taxaJuros;
+    }
+
+    renderJuros() {
+        this.depositar(this.saldo * this._taxaJuros/100)
     }
 }

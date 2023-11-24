@@ -1,7 +1,9 @@
-import { Conta } from "./conta.js";
-import { Poupanca } from "./poupanca.js";
+import { Conta } from "./Conta.js";
+import { Poupanca } from "./Poupanca.js";
 import { ContaImposto } from "./ContaImposto.js";
 import { ContaInexistenteError } from "./erros/ContaInexistenteError.js";
+import { ContaJaExisteError } from "./erros/ContaJaExisteError.js";
+import { PoupancaInvalidaError } from "./erros/PoupancaInvalidaError.js";
 
 class Banco {
     private _contas: Conta[] = [];
@@ -25,7 +27,7 @@ class Banco {
         return this.total / this.totalContas;
     }
 
-    private consultarPorIndice(numero: string) {
+    private consultarContaPorIndice(numero: string): number {
         let indiceAlvo = -1;
 
         let qtdContas = this._contas.length;
@@ -33,15 +35,11 @@ class Banco {
         for (let i = 0; i < qtdContas; i++) {
             if (this._contas[i].numero == numero) {
                 indiceAlvo = i;
-                break;
+                return indiceAlvo
             }
         }
 
-        if (indiceAlvo == -1) {
-            throw new ContaInexistenteError("A conta não existe")
-        }
-
-        return indiceAlvo;
+        throw new ContaInexistenteError("A conta não existe.")
     }
 
     consultarConta(numero: string): Conta {
@@ -50,95 +48,68 @@ class Banco {
         for (let conta of this._contas) {
             if (conta.numero == numero) {
                 contaAlvo = conta;
-                break;
+                return contaAlvo;
             }
         }
 
-        if (contaAlvo == null) {
-            throw new ContaInexistenteError("A conta não existe")
-        }
+        throw new ContaInexistenteError("A conta não existe.")
 
-        return contaAlvo;
     }
 
     incluirConta(conta: Conta) {
-        let indice = this.consultarPorIndice(conta.numero);
-
-        if (indice != -1) {
-            //
-            console.log("\nA conta já existe!");
-            return;
-        }
-
-        this._contas.push(conta);
-    }
-
-    excluirConta(numero: string) {
-        let indice = this.consultarPorIndice(numero);
-
-        if (indice != -1) {
-            this._contas.splice(indice, 1);
-        } else {
-            //
-            console.log("\nImpossível excluir, conta inexistente!");
-        }
-    }
-
-    sacar(numero: string, valor: number) {
-        let indice = this.consultarPorIndice(numero);
-
-        if (indice != -1) {
-            let conta: Conta = this._contas[indice];
-            conta.sacar(valor);
-            //
-            console.log("\nSaque realizado com sucesso!");
-        } else if (indice == -1) {
-            //
-            console.log(`\nA conta "${numero}" não existe!`);
-        }
-    }
-
-    depositar(numero: string, valor: number) {
-        let indice = this.consultarPorIndice(numero);
-
-        if (indice != -1) {
-            let conta: Conta = this._contas[indice];
-            conta.depositar(valor);
-            //
-            console.log("\nDepósito realizado com sucesso!");
-        } else if (indice == -1) {
-            //
-            console.log(`\nA conta "${numero}" não existe!`);
-        }
-    }
-
-    // questão 5
-    transferir(numCred: string, numDeb: string, valor: number) {
-        let indiceCred = this.consultarPorIndice(numCred);
-        let indiceDeb = this.consultarPorIndice(numDeb);
-
-        if (indiceCred !== -1 && indiceDeb !== -1) {
-            let contaOrigem: Conta = this._contas[indiceCred];
-            let contaDestino: Conta = this._contas[indiceDeb];
-
-            contaOrigem.transferir(contaDestino, valor);
-        }
-    }
-
-    renderJuros(numero: string) {
-        let indiceAlvo = this.consultarPorIndice(numero);
-
-        if (indiceAlvo != -1) {
-            let conta: Conta = this._contas[indiceAlvo];
-            if (conta instanceof Poupanca) {
-                let poupanca: Poupanca = <Poupanca>conta;
-                poupanca.depositar(poupanca.saldo * poupanca.taxaJuros);
+        try {
+            this.consultarContaPorIndice(conta.numero)
+            throw new ContaJaExisteError("Já existe uma conta com este CPF.")
+            
+        } catch (e: any) {
+            if (e instanceof ContaJaExisteError) {
+                throw new ContaJaExisteError('Já existe uma conta com este CPF.')
+            } else {
+                this._contas.push(conta)
             }
         }
     }
 
+    excluirConta(numero: string) {
+        let indice = this.consultarContaPorIndice(numero);
+        this._contas.splice(indice, 1);
+    }
+
+    sacar(numero: string, valor: number) {
+        let indice = this.consultarContaPorIndice(numero);
+        let conta: Conta = this._contas[indice];
+        conta.sacar(valor);
+    }
+
+    depositar(numero: string, valor: number) {
+        const conta = this.consultarConta(numero)
+
+        if (conta instanceof ContaImposto) {
+            conta.depositar(valor)
+        }
+
+        conta.depositar(valor)
+    }
+
+    // questão 5
+    transferir(numCred: string, numDeb: string, valor: number): void {
+        const contaDeb = this.consultarConta(numCred)
+        const contaCred = this.consultarConta(numDeb)
+        contaDeb.transferir(contaCred, valor)
+    }
+
+    renderJuros(numero: string) {
+        const conta = this.consultarConta(numero)
+
+        if (conta instanceof Poupanca) {
+            conta.renderJuros()
+        }
+
+        throw new PoupancaInvalidaError("Esta conta não é uma poupança.")
+    }
+
     toString(conta: Conta): string {
-        let message = `\nCPF: ${conta.numero}\nNome: ${
+        let message = `\nCPF: ***********\nNome: ${
             conta.nome
         }\nSaldo: R$ ${conta.saldo.toFixed(2)}`;
         if (conta instanceof Poupanca) {
@@ -168,20 +139,16 @@ class Banco {
         return contaString;
     }
 
-    exibirContas() {
+    exibirContasExistentes() {
         for (let conta of this._contas) {
             console.log(this.toString(conta));
         }
     }
 
     consultarHistorico(numero: string): string[] {
-        let indice = this.consultarPorIndice(numero);
+        let indice = this.consultarContaPorIndice(numero);
 
-        if (indice != -1) {
-            return this._contas[indice].historico;
-        }
-
-        return [];
+        return this._contas[indice].historico;
     }
 }
 
@@ -199,3 +166,13 @@ export {Conta, ContaImposto, Poupanca, Banco}
 // aumentou a robustez do app, sem a necessidade de tantos if para a validação
 
 
+// questão 8
+// let banco = new Banco();
+// let conta = new Conta("teste", "1111", 100);
+// let conta2 = new Conta("teste2", "2222", 100);
+
+// banco.incluirConta(conta);
+// banco.incluirConta(conta2);
+
+// console.log(banco.consultarConta('1111'))
+// banco.consultarConta('12')

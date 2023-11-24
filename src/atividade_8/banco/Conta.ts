@@ -60,7 +60,7 @@ export class Conta {
         }
     }
 
-    private validaValor(valor: number): void {
+    validaValor(valor: number): void {
         this.validaInput(valor)
         if (valor <= 0) {
             throw new ValorInvalidoError("O valor deve ser positivo.")

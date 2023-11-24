@@ -1,8 +1,9 @@
-import { Conta } from "./conta.js"
+import { Conta } from "./Conta.js"
 
 export class ContaImposto extends Conta {
     constructor(nome: string, numero: string, saldo: number, private _taxaDesconto: number) {
         super(nome, numero, saldo)
+        this.validaValor(_taxaDesconto)
     }
 
     get taxaDesconto() {
@@ -18,5 +19,4 @@ export class ContaImposto extends Conta {
 		const valorDesconto = this.saldo * this._taxaDesconto / 100;
 		super.sacar(valor + valorDesconto);
 	}
-
 }

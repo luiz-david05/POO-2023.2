@@ -1,9 +1,10 @@
-import { Conta } from "./conta.js";
+import { Conta } from "./Conta.js";
 export class ContaImposto extends Conta {
     _taxaDesconto;
     constructor(nome, numero, saldo, _taxaDesconto) {
         super(nome, numero, saldo);
         this._taxaDesconto = _taxaDesconto;
+        this.validaValor(_taxaDesconto);
     }
     get taxaDesconto() {
         return this._taxaDesconto;

@@ -1,7 +1,9 @@
-import { Conta } from "./conta.js";
-import { Poupanca } from "./poupanca.js";
+import { Conta } from "./Conta.js";
+import { Poupanca } from "./Poupanca.js";
 import { ContaImposto } from "./ContaImposto.js";
 import { ContaInexistenteError } from "./erros/ContaInexistenteError.js";
+import { ContaJaExisteError } from "./erros/ContaJaExisteError.js";
+import { PoupancaInvalidaError } from "./erros/PoupancaInvalidaError.js";
 class Banco {
     _contas = [];
     get contas() {
@@ -18,100 +20,72 @@ class Banco {
     get mediaDepositada() {
         return this.total / this.totalContas;
     }
-    consultarPorIndice(numero) {
+    consultarContaPorIndice(numero) {
         let indiceAlvo = -1;
         let qtdContas = this._contas.length;
         for (let i = 0; i < qtdContas; i++) {
             if (this._contas[i].numero == numero) {
                 indiceAlvo = i;
-                break;
+                return indiceAlvo;
             }
         }
-        if (indiceAlvo == -1) {
-            throw new ContaInexistenteError("A conta não existe");
-        }
-        return indiceAlvo;
+        throw new ContaInexistenteError("A conta não existe.");
     }
     consultarConta(numero) {
         let contaAlvo;
         for (let conta of this._contas) {
             if (conta.numero == numero) {
                 contaAlvo = conta;
-                break;
+                return contaAlvo;
             }
         }
-        if (contaAlvo == null) {
-            throw new ContaInexistenteError("A conta não existe");
-        }
-        return contaAlvo;
+        throw new ContaInexistenteError("A conta não existe.");
     }
     incluirConta(conta) {
-        let indice = this.consultarPorIndice(conta.numero);
-        if (indice != -1) {
-            //
-            console.log("\nA conta já existe!");
-            return;
+        try {
+            this.consultarContaPorIndice(conta.numero);
+            throw new ContaJaExisteError("Já existe uma conta com este CPF.");
         }
-        this._contas.push(conta);
+        catch (e) {
+            if (e instanceof ContaJaExisteError) {
+                throw new ContaJaExisteError('Já existe uma conta com este CPF.');
+            }
+            else {
+                this._contas.push(conta);
+            }
+        }
     }
     excluirConta(numero) {
-        let indice = this.consultarPorIndice(numero);
-        if (indice != -1) {
-            this._contas.splice(indice, 1);
-        }
-        else {
-            //
-            console.log("\nImpossível excluir, conta inexistente!");
-        }
+        let indice = this.consultarContaPorIndice(numero);
+        this._contas.splice(indice, 1);
     }
     sacar(numero, valor) {
-        let indice = this.consultarPorIndice(numero);
-        if (indice != -1) {
-            let conta = this._contas[indice];
-            conta.sacar(valor);
-            //
-            console.log("\nSaque realizado com sucesso!");
-        }
-        else if (indice == -1) {
-            //
-            console.log(`\nA conta "${numero}" não existe!`);
-        }
+        let indice = this.consultarContaPorIndice(numero);
+        let conta = this._contas[indice];
+        conta.sacar(valor);
     }
     depositar(numero, valor) {
-        let indice = this.consultarPorIndice(numero);
-        if (indice != -1) {
-            let conta = this._contas[indice];
+        const conta = this.consultarConta(numero);
+        if (conta instanceof ContaImposto) {
             conta.depositar(valor);
-            //
-            console.log("\nDepósito realizado com sucesso!");
         }
-        else if (indice == -1) {
-            //
-            console.log(`\nA conta "${numero}" não existe!`);
-        }
+        conta.depositar(valor);
     }
     // questão 5
     transferir(numCred, numDeb, valor) {
-        let indiceCred = this.consultarPorIndice(numCred);
-        let indiceDeb = this.consultarPorIndice(numDeb);
-        if (indiceCred !== -1 && indiceDeb !== -1) {
-            let contaOrigem = this._contas[indiceCred];
-            let contaDestino = this._contas[indiceDeb];
-            contaOrigem.transferir(contaDestino, valor);
-        }
+        const contaDeb = this.consultarConta(numCred);
+        const contaCred = this.consultarConta(numDeb);
+        contaDeb.transferir(contaCred, valor);
     }
     renderJuros(numero) {
-        let indiceAlvo = this.consultarPorIndice(numero);
-        if (indiceAlvo != -1) {
-            let conta = this._contas[indiceAlvo];
-            if (conta instanceof Poupanca) {
-                let poupanca = conta;
-                poupanca.depositar(poupanca.saldo * poupanca.taxaJuros);
-            }
+        const conta = this.consultarConta(numero);
+        if (conta instanceof Poupanca) {
+            conta.renderJuros();
         }
+        throw new PoupancaInvalidaError("Esta conta não é uma poupança.");
     }
     toString(conta) {
-        let message = `\nCPF: ${conta.numero}\nNome: ${conta.nome}\nSaldo: R$ ${conta.saldo.toFixed(2)}`;
+        let message = `\nCPF: ***********\nNome: ${conta.nome}\nSaldo: R$ ${conta.saldo.toFixed(2)}`;
         if (conta instanceof Poupanca) {
             message += `\nTaxa de Juros: ${conta.taxaJuros}%`;
         }
@@ -137,17 +111,14 @@ class Banco {
         }
         return contaString;
     }
-    exibirContas() {
+    exibirContasExistentes() {
         for (let conta of this._contas) {
             console.log(this.toString(conta));
         }
     }
     consultarHistorico(numero) {
-        let indice = this.consultarPorIndice(numero);
-        if (indice != -1) {
-            return this._contas[indice].historico;
-        }
-        return [];
+        let indice = this.consultarContaPorIndice(numero);
+        return this._contas[indice].historico;
     }
 }
 export { Conta, ContaImposto, Poupanca, Banco };
@@ -159,3 +130,11 @@ export { Conta, ContaImposto, Poupanca, Banco };
 // banco.incluirConta(conta2);
 // banco.transferir("1111", "2222", 200);
 // aumentou a robustez do app, sem a necessidade de tantos if para a validação
+// questão 8
+// let banco = new Banco();
+// let conta = new Conta("teste", "1111", 100);
+// let conta2 = new Conta("teste2", "2222", 100);
+// banco.incluirConta(conta);
+// banco.incluirConta(conta2);
+// console.log(banco.consultarConta('1111'))
+// banco.consultarConta('12')
