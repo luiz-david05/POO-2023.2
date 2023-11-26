@@ -9,7 +9,8 @@ export class Conta {
         private _saldo: number,
         private _historico: string[] = []
     ) {
-        this.validaValor(this._saldo)
+        // se uma conta tiver saldo 0, o programa apaga todas as outra no arquivo
+        // this.validaValor(this._saldo)
         this._historico = [`Conta criada: +${_saldo}`];
     }
 
@@ -31,7 +32,7 @@ export class Conta {
 
     // questão 3
     sacar(valor: number): void {
-        this.validaValor(valor)
+        this.validaSaldo(this._saldo, valor)
 
         this._saldo -= valor;
         this._historico.push(`Saque: -${valor}`);
@@ -46,7 +47,6 @@ export class Conta {
 
 
     transferir(contaDestino: Conta, valor: number): void {
-        this.validaSaldo(contaDestino.saldo, valor)
         this.sacar(valor);
         contaDestino.depositar(valor);
         this._historico.push(
@@ -60,7 +60,7 @@ export class Conta {
         }
     }
 
-    validaValor(valor: number): void {
+    private validaValor(valor: number): void {
         this.validaInput(valor)
         if (valor <= 0) {
             throw new ValorInvalidoError("O valor deve ser positivo.")
@@ -69,8 +69,9 @@ export class Conta {
 
     private validaSaldo(saldo: number, valor: number) {
         this.validaInput(saldo)
+        this.validaInput(valor)
 
-        if (valor > saldo) {
+        if (saldo < 0 || valor > saldo) {
             throw new SaldoInsuficienteError("O saldo não foi suficiente para finalizar a operação.")
         }
     }

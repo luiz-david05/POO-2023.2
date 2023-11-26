@@ -4,13 +4,13 @@ export class ContaImposto extends Conta {
     constructor(nome, numero, saldo, _taxaDesconto) {
         super(nome, numero, saldo);
         this._taxaDesconto = _taxaDesconto;
-        this.validaValor(_taxaDesconto);
     }
     get taxaDesconto() {
         return this._taxaDesconto;
     }
+    // erro
     depositar(valor) {
-        const valorDepositado = valor * (1 * this._taxaDesconto / 100);
+        const valorDepositado = valor * (1 - this._taxaDesconto / 100);
         super.depositar(valorDepositado);
     }
     sacar(valor) {

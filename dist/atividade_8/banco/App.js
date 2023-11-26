@@ -82,13 +82,18 @@ class App {
             throw new InputInvalidoError("Nome inválido: caracteres não permitidos encontrados.");
         }
     }
-    validaTipo(tipo) { }
+    validaValor(valor) {
+        if (isNaN(valor) || valor <= 0) {
+            throw new InputInvalidoError("Valor inválido: o valor deve ser maior que zero.");
+        }
+    }
     criarConta() {
         const nome = input("Nome do titular: ");
         this.validaNome(nome);
         const cpf = input("Insira o CPF: ");
         this.validaCPF(cpf);
         const saldo = Number(input("Insira o valor que deseja depositar para iniciar sua conta: "));
+        this.validaValor(saldo);
         console.log("Selecione o tipo de conta: [C] - Corrente, [P] - Poupança, [CI] - Imposto");
         const tipo = input("Digite aqui: ");
         let conta;
@@ -108,16 +113,48 @@ class App {
         console.log("Conta cadastrada com sucesso!");
         // console.log(this._banco.toString(conta))
     }
-    exibirContas() {
-        this._banco.exibirContasExistentes();
+    consultarConta() {
+        const cpf = input("Insira o CPF do titular: ");
+        const conta = this._banco.consultarConta(cpf);
+        console.log(this._banco.toString(conta));
+    }
+    sacar() {
+        const cpf = input("Insira o CPF do titular: ");
+        const conta = this._banco.consultarConta(cpf);
+        const valor = Number(input("Insira o valor a ser sacado: "));
+        this._banco.sacar(conta.numero, valor);
+        console.log("Saque realizado com sucesso!");
+    }
+    depositar() {
+        const cpf = input("Insira o CPF do titular: ");
+        const conta = this._banco.consultarConta(cpf);
+        const valor = Number(input("Insira o valor a ser depositado: "));
+        this._banco.depositar(conta.numero, valor);
+        console.log("Depósito realizado com sucesso!");
+    }
+    transferir() {
+        const cpf = input("Insira o CPF do titular: ");
+        const conta = this._banco.consultarConta(cpf);
+        const valor = Number(input("Insira o valor a ser transferido: "));
+        const cpfDestino = input("Insira o CPF do destinatário: ");
+        const contaDestino = this._banco.consultarConta(cpfDestino);
+        this._banco.transferir(conta.numero, contaDestino.numero, valor);
+        console.log("Transferência realizada com sucesso!");
+    }
+    renderJuros() {
+        const cpf = input("Insira o CPF do titular: ");
+        const conta = this._banco.consultarConta(cpf);
+        this._banco.renderJuros(conta.numero);
+        console.log("Juros renderizados com sucesso!");
     }
     menu() {
         console.log("\nOpções disponíveis:");
-        const texto = "\n\t1 - Criar Conta no Banco\n" +
-            // '\n\t2 - Consultar conta com CPF do titulas' +
-            // '\n\t3 - Realizar saque na conta' +
-            // '\n\t4 - Realizar depósito na conta' +
-            '\n\t4 - Contas Existentes no Banco\n' +
+        const texto = '\n\t1 - Criar Conta no Banco\n' +
+            '\n\t2 - Consultar conta a partir do CPF do titular\n' +
+            '\n\t3 - Realizar saque na conta\n' +
+            '\n\t4 - Realizar depósito na conta\n' +
+            '\n\t5 - Realizar transferencia entre contas\n' +
+            '\n\t6 - Render juros Conta Poupanca\n' +
             '\t0 - sair\n';
         console.log(texto);
     }
@@ -145,8 +182,17 @@ class App {
                     case 1:
                         this.criarConta();
                         break;
+                    case 2:
+                        this.consultarConta();
+                        break;
+                    case 3:
+                        this.sacar();
+                        break;
                     case 4:
-                        this.exibirContas();
+                        this.depositar();
+                        break;
+                    case 5:
+                        this.transferir();
                         break;
                 }
             }

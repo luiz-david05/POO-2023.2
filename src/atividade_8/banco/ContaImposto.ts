@@ -3,15 +3,15 @@ import { Conta } from "./Conta.js"
 export class ContaImposto extends Conta {
     constructor(nome: string, numero: string, saldo: number, private _taxaDesconto: number) {
         super(nome, numero, saldo)
-        this.validaValor(_taxaDesconto)
     }
 
     get taxaDesconto() {
         return this._taxaDesconto
     }
 
+    // erro
     depositar(valor: number) {
-        const valorDepositado = valor * (1 * this._taxaDesconto / 100)
+        const valorDepositado = valor * (1 - this._taxaDesconto / 100)
         super.depositar(valorDepositado)
     }
 
