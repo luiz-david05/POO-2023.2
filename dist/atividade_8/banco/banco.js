@@ -9,6 +9,17 @@ class Banco {
     get contas() {
         return this._contas;
     }
+    get total() {
+        let totalDepositado = 0;
+        this._contas.forEach((conta) => (totalDepositado += conta.saldo));
+        return totalDepositado;
+    }
+    get totalContas() {
+        return this._contas.length;
+    }
+    get mediaDepositada() {
+        return this.total / this.totalContas;
+    }
     consultarContaPorIndice(numero) {
         let qtdContas = this._contas.length;
         for (let i = 0; i < qtdContas; i++) {
@@ -31,7 +42,7 @@ class Banco {
         }
         catch (e) {
             if (e instanceof ContaJaExisteError) {
-                throw new ContaJaExisteError("Já existe uma conta com este CPF.");
+                throw new ContaJaExisteError('Já existe uma conta com este CPF.');
             }
             else {
                 this._contas.push(conta);
@@ -47,7 +58,7 @@ class Banco {
         this._contas.splice(indice, 1);
     }
     sacar(numero, valor) {
-        const conta = this.consultarConta(numero);
+        let conta = this.consultarConta(numero);
         if (conta instanceof ContaImposto) {
             conta.sacar(valor);
         }
@@ -71,9 +82,7 @@ class Banco {
         if (conta instanceof Poupanca) {
             conta.renderJuros();
         }
-        else {
-            throw new PoupancaInvalidaError("Esta conta não é uma poupança.");
-        }
+        throw new PoupancaInvalidaError("Esta conta não é uma poupança.");
     }
     toString(conta) {
         let message = `\nCPF: ${conta.numero}\nNome: ${conta.nome}\nSaldo: R$ ${conta.saldo.toFixed(2)}`;
@@ -85,27 +94,27 @@ class Banco {
         }
         return message;
     }
-    obterTipoConta(conta) {
+    arquivoToString(conta) {
+        let tipo = "C";
         if (conta instanceof Poupanca) {
-            return "P";
+            tipo = "P";
         }
         else if (conta instanceof ContaImposto) {
-            return "CI";
+            tipo = "CI";
         }
-        else {
-            return "C";
-        }
-    }
-    arquivoToString(conta) {
-        let tipo = this.obterTipoConta(conta);
         let contaString = `${tipo};${conta.numero};${conta.nome};${conta.saldo}`;
-        if (conta instanceof Poupanca) {
+        if (tipo === "P") {
             contaString += `;${conta.taxaJuros}`;
         }
-        else if (conta instanceof ContaImposto) {
+        else if (tipo === "CI") {
             contaString += `;${conta.taxaDesconto}`;
         }
         return contaString;
+    }
+    exibirContasExistentes() {
+        for (let conta of this._contas) {
+            console.log(this.toString(conta));
+        }
     }
     consultarHistorico(numero) {
         let indice = this.consultarContaPorIndice(numero);

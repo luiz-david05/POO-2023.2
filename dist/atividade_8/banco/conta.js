@@ -11,6 +11,7 @@ export class Conta {
         this._numero = _numero;
         this._saldo = _saldo;
         this._historico = _historico;
+        // se uma conta tiver saldo 0, o programa apaga todas as outra no arquivo
         // this.validaValor(this._saldo)
         this._historico = [`Conta criada: +${_saldo}`];
     }
@@ -40,9 +41,7 @@ export class Conta {
     transferir(contaDestino, valor) {
         this.sacar(valor);
         contaDestino.depositar(valor);
-        // this._historico.push(
-        //     `Transferência: +${valor} para conta ${contaDestino._numero}`
-        // );
+        this._historico.push(`Transferência: -${valor} para conta ${contaDestino._numero}`);
     }
     validaInput(input) {
         if (isNaN(input)) {
