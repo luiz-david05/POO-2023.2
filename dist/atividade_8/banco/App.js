@@ -1,10 +1,10 @@
 import { Conta, Banco, Poupanca, ContaImposto } from "./Banco.js";
-import * as fs from "fs";
 import { input } from "./utils.js";
 import { AplicacaoError } from "./erros/AplicacaoError.js";
 import { ArquivoError } from "./erros/ArquivoError.js";
 import { InputInvalidoError } from "./erros/InputInvalidoError.js";
 import { CPFInvalidoError } from "./erros/CPFInvalidoError.js";
+import * as fs from 'fs';
 class App {
     _banco = new Banco();
     static main() {
@@ -75,8 +75,8 @@ class App {
         }
     }
     validaNome(nome) {
-        if (!nome.trim() || nome.length > 100) {
-            throw new InputInvalidoError("Nome inválido: o comprimento deve estar entre 1 e 100 caracteres");
+        if (nome.length < 5 || nome.length > 100) {
+            throw new InputInvalidoError("Nome inválido: o comprimento deve estar entre 5 e 100 caracteres");
         }
         if (!/^[a-zA-ZÀ-ÿ\s'-]+$/.test(nome)) {
             throw new InputInvalidoError("Nome inválido: caracteres não permitidos encontrados.");
@@ -86,6 +86,14 @@ class App {
         if (isNaN(valor) || valor <= 0) {
             throw new InputInvalidoError("Valor inválido: o valor deve ser maior que zero.");
         }
+    }
+    validaOpcao() {
+        let opcao = input("Tecle a opção correspondente: ").trim();
+        while (opcao === "" || isNaN(Number(opcao)) || Number(opcao) < 0 || Number(opcao) > 8) {
+            console.log("Opção inválida!");
+            opcao = input("Tecle a opção correspondente: ").trim();
+        }
+        return opcao;
     }
     criarConta() {
         const nome = input("Nome do titular: ");
@@ -120,32 +128,36 @@ class App {
     }
     sacar() {
         const cpf = input("Insira o CPF do titular: ");
-        const conta = this._banco.consultarConta(cpf);
         const valor = Number(input("Insira o valor a ser sacado: "));
-        this._banco.sacar(conta.numero, valor);
+        this._banco.sacar(cpf, valor);
         console.log("Saque realizado com sucesso!");
     }
     depositar() {
         const cpf = input("Insira o CPF do titular: ");
-        const conta = this._banco.consultarConta(cpf);
         const valor = Number(input("Insira o valor a ser depositado: "));
-        this._banco.depositar(conta.numero, valor);
+        this._banco.depositar(cpf, valor);
         console.log("Depósito realizado com sucesso!");
     }
     transferir() {
         const cpf = input("Insira o CPF do titular: ");
-        const conta = this._banco.consultarConta(cpf);
         const valor = Number(input("Insira o valor a ser transferido: "));
         const cpfDestino = input("Insira o CPF do destinatário: ");
-        const contaDestino = this._banco.consultarConta(cpfDestino);
-        this._banco.transferir(conta.numero, contaDestino.numero, valor);
+        this._banco.transferir(cpf, cpfDestino, valor);
         console.log("Transferência realizada com sucesso!");
     }
     renderJuros() {
         const cpf = input("Insira o CPF do titular: ");
-        const conta = this._banco.consultarConta(cpf);
-        this._banco.renderJuros(conta.numero);
+        this._banco.renderJuros(cpf);
         console.log("Juros renderizados com sucesso!");
+    }
+    excluirConta() {
+        const cpf = input("Insira o CPF do titular: ");
+        this._banco.excluirConta(cpf);
+        console.log('\nConta excluida com sucesso!');
+    }
+    exibirHistorico() {
+        const cpf = input("Insira o CPF do titular: ");
+        console.log(`Histórico de operações: ${this._banco.consultarHistorico(cpf)}`);
     }
     menu() {
         console.log("\nOpções disponíveis:");
@@ -155,26 +167,26 @@ class App {
             '\n\t4 - Realizar depósito na conta\n' +
             '\n\t5 - Realizar transferencia entre contas\n' +
             '\n\t6 - Render juros Conta Poupanca\n' +
-            '\t0 - sair\n';
+            '\n\t7 - Consultar histórico de operações\n' +
+            '\n\t8 - Excluir conta\n' +
+            '\n\t0 - sair\n';
         console.log(texto);
     }
     run() {
         console.log("Carregando dados da aplicação...");
         try {
             this.carregarContas();
+            console.log('\nDados carregados!');
         }
         catch (e) {
             console.log(e.message);
         }
-        finally {
-            console.log('\nDados carregados!');
-        }
-        input("\nTecle enter para continuar...");
         let opcao;
         do {
+            input("\nTecle enter para continuar...");
             this.menu();
+            opcao = Number(this.validaOpcao());
             try {
-                opcao = Number(input("Tecle a opcão correspondente: "));
                 switch (opcao) {
                     case 0:
                         this.salvarContas();
@@ -194,12 +206,21 @@ class App {
                     case 5:
                         this.transferir();
                         break;
+                    case 6:
+                        this.renderJuros();
+                        break;
+                    case 7:
+                        this.exibirHistorico();
+                        break;
+                    case 8:
+                        this.excluirConta();
+                        break;
                 }
             }
             catch (e) {
                 console.log(`\nNão foi possível concluir a operação!\n${e.message}`);
                 if (!(e instanceof AplicacaoError)) {
-                    console.log("Ops, este erro não foi reconhecido..., contate o administrador.");
+                    console.log(e.message, "Ops, este erro não foi reconhecido..., contate o administrador.");
                 }
             }
         } while (opcao != 0);

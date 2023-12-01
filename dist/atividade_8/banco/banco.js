@@ -9,59 +9,48 @@ class Banco {
     get contas() {
         return this._contas;
     }
-    get total() {
-        let totalDepositado = 0;
-        this._contas.forEach((conta) => (totalDepositado += conta.saldo));
-        return totalDepositado;
-    }
-    get totalContas() {
-        return this._contas.length;
-    }
-    get mediaDepositada() {
-        return this.total / this.totalContas;
-    }
     consultarContaPorIndice(numero) {
-        let indiceAlvo = -1;
         let qtdContas = this._contas.length;
         for (let i = 0; i < qtdContas; i++) {
             if (this._contas[i].numero == numero) {
-                indiceAlvo = i;
-                return indiceAlvo;
+                return i;
             }
         }
         throw new ContaInexistenteError("A conta não existe.");
     }
     consultarConta(numero) {
-        let contaAlvo;
-        for (let conta of this._contas) {
-            if (conta.numero == numero) {
-                contaAlvo = conta;
-                return contaAlvo;
-            }
-        }
-        throw new ContaInexistenteError("A conta não existe.");
+        let contaProcurada;
+        const indice = this.consultarContaPorIndice(numero);
+        contaProcurada = this._contas[indice];
+        return contaProcurada;
     }
     incluirConta(conta) {
         try {
-            this.consultarContaPorIndice(conta.numero);
+            this.consultarConta(conta.numero);
             throw new ContaJaExisteError("Já existe uma conta com este CPF.");
         }
         catch (e) {
             if (e instanceof ContaJaExisteError) {
-                throw new ContaJaExisteError('Já existe uma conta com este CPF.');
+                throw new ContaJaExisteError("Já existe uma conta com este CPF.");
             }
             else {
                 this._contas.push(conta);
             }
         }
     }
+    // alterar(conta: Conta) {
+    //     let indice = this.consultarContaPorIndice(conta.numero);
+    //     this._contas[indice] = conta;
+    // }
     excluirConta(numero) {
         let indice = this.consultarContaPorIndice(numero);
         this._contas.splice(indice, 1);
     }
     sacar(numero, valor) {
-        let indice = this.consultarContaPorIndice(numero);
-        let conta = this._contas[indice];
+        const conta = this.consultarConta(numero);
+        if (conta instanceof ContaImposto) {
+            conta.sacar(valor);
+        }
         conta.sacar(valor);
     }
     depositar(numero, valor) {
@@ -82,10 +71,12 @@ class Banco {
         if (conta instanceof Poupanca) {
             conta.renderJuros();
         }
-        throw new PoupancaInvalidaError("Esta conta não é uma poupança.");
+        else {
+            throw new PoupancaInvalidaError("Esta conta não é uma poupança.");
+        }
     }
     toString(conta) {
-        let message = `\nCPF: ***********\nNome: ${conta.nome}\nSaldo: R$ ${conta.saldo.toFixed(2)}`;
+        let message = `\nCPF: ${conta.numero}\nNome: ${conta.nome}\nSaldo: R$ ${conta.saldo.toFixed(2)}`;
         if (conta instanceof Poupanca) {
             message += `\nTaxa de Juros: ${conta.taxaJuros}%`;
         }
@@ -94,27 +85,27 @@ class Banco {
         }
         return message;
     }
-    arquivoToString(conta) {
-        let tipo = "C";
+    obterTipoConta(conta) {
         if (conta instanceof Poupanca) {
-            tipo = "P";
+            return "P";
         }
         else if (conta instanceof ContaImposto) {
-            tipo = "CI";
+            return "CI";
         }
+        else {
+            return "C";
+        }
+    }
+    arquivoToString(conta) {
+        let tipo = this.obterTipoConta(conta);
         let contaString = `${tipo};${conta.numero};${conta.nome};${conta.saldo}`;
-        if (tipo === "P") {
+        if (conta instanceof Poupanca) {
             contaString += `;${conta.taxaJuros}`;
         }
-        else if (tipo === "CI") {
+        else if (conta instanceof ContaImposto) {
             contaString += `;${conta.taxaDesconto}`;
         }
         return contaString;
-    }
-    exibirContasExistentes() {
-        for (let conta of this._contas) {
-            console.log(this.toString(conta));
-        }
     }
     consultarHistorico(numero) {
         let indice = this.consultarContaPorIndice(numero);

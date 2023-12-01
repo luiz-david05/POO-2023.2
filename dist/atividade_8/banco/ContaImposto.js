@@ -8,13 +8,12 @@ export class ContaImposto extends Conta {
     get taxaDesconto() {
         return this._taxaDesconto;
     }
-    // erro
+    sacar(valor) {
+        const valorDesconto = valor * (1 + this._taxaDesconto / 100);
+        super.sacar(valor + valorDesconto);
+    }
     depositar(valor) {
         const valorDepositado = valor * (1 - this._taxaDesconto / 100);
         super.depositar(valorDepositado);
-    }
-    sacar(valor) {
-        const valorDesconto = this.saldo * this._taxaDesconto / 100;
-        super.sacar(valor + valorDesconto);
     }
 }

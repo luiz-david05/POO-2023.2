@@ -8,7 +8,6 @@ export class Poupanca extends Conta {
         private _taxaJuros: number
     ) {
         super(nome, numero, saldo);
-        this.validaValor(_taxaJuros)
     }
 
     get taxaJuros(): number {

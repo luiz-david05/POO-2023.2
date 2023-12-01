@@ -9,7 +9,6 @@ export class Conta {
         private _saldo: number,
         private _historico: string[] = []
     ) {
-        // se uma conta tiver saldo 0, o programa apaga todas as outra no arquivo
         // this.validaValor(this._saldo)
         this._historico = [`Conta criada: +${_saldo}`];
     }
@@ -49,9 +48,9 @@ export class Conta {
     transferir(contaDestino: Conta, valor: number): void {
         this.sacar(valor);
         contaDestino.depositar(valor);
-        this._historico.push(
-            `Transferência: -${valor} para conta ${contaDestino._numero}`
-        );
+        // this._historico.push(
+        //     `Transferência: +${valor} para conta ${contaDestino._numero}`
+        // );
     }
 
     private validaInput(input: number): void {

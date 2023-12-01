@@ -4,7 +4,6 @@ export class Poupanca extends Conta {
     constructor(nome, numero, saldo, _taxaJuros) {
         super(nome, numero, saldo);
         this._taxaJuros = _taxaJuros;
-        this.validaValor(_taxaJuros);
     }
     get taxaJuros() {
         return this._taxaJuros;

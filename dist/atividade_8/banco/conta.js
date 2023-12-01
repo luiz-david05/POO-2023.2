@@ -11,7 +11,7 @@ export class Conta {
         this._numero = _numero;
         this._saldo = _saldo;
         this._historico = _historico;
-        this.validaValor(this._saldo);
+        // this.validaValor(this._saldo)
         this._historico = [`Conta criada: +${_saldo}`];
     }
     get nome() {
@@ -28,7 +28,7 @@ export class Conta {
     }
     // questão 3
     sacar(valor) {
-        this.validaValor(valor);
+        this.validaSaldo(this._saldo, valor);
         this._saldo -= valor;
         this._historico.push(`Saque: -${valor}`);
     }
@@ -38,10 +38,11 @@ export class Conta {
         this._historico.push(`Depósito: +${valor}`);
     }
     transferir(contaDestino, valor) {
-        this.validaSaldo(contaDestino.saldo, valor);
         this.sacar(valor);
         contaDestino.depositar(valor);
-        this._historico.push(`Transferência: -${valor} para conta ${contaDestino._numero}`);
+        // this._historico.push(
+        //     `Transferência: +${valor} para conta ${contaDestino._numero}`
+        // );
     }
     validaInput(input) {
         if (isNaN(input)) {
@@ -56,7 +57,8 @@ export class Conta {
     }
     validaSaldo(saldo, valor) {
         this.validaInput(saldo);
-        if (valor > saldo) {
+        this.validaInput(valor);
+        if (saldo < 0 || valor > saldo) {
             throw new SaldoInsuficienteError("O saldo não foi suficiente para finalizar a operação.");
         }
     }
